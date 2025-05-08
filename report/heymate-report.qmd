@@ -15,13 +15,9 @@ format:
     geometry: margin=1in
 ---
 
-# Capstone Proposal Report
-
 ## Executive Summary
 
 This project supports Heymate’s mission to empower restaurant clients with smarter, data-driven tools. We propose a recommendation engine that identifies popular menu items based on market trends, offering a practical and flexible approach to menu optimization. While the initial version uses popularity-based scoring, future enhancements will leverage pre-trained models and richer data sources to improve accuracy and impact. Heymate currently lacks a recommendation feature and is looking to us to build a framework that can support future development. This tool will help restaurants optimize offerings, reduce waste, and boost sales.
-
-![Visual overview of the recommender system workflow](../image/1_visual_flow.png){width="70%" fig-align="center"}
 
 ## Introduction and Project Motivation
 
@@ -29,13 +25,13 @@ Many restaurants operate with limited insight into which cuisines are popular. T
 Heymate, our project partner, is a Canadian tech company that offers cashback rewards and a full-suite business management platform for small and medium-sized enterprises (SMEs). Since many of Heymate’s clients are restaurants, they are a primary focus for added value through smart tools.\
 This project helps Heymate enhance its role as a strategic partner by providing restaurant clients with a menu recommendation tool designed to answer two key questions:
 
-1.  How can menus match market trends?\
-2.  How can market data help restaurant owners make better-informed decisions?
+- How can menus match market trends?\
+- How can market data help restaurant owners make better-informed decisions?
 
 The solution consists of the following two components:
 
-1.  Develop a recommender system that suggests menu adjustments based on existing items and restaurant type\
-2.  Build a data pipeline that continuously ingests new data to enhance the model’s accuracy and relevance over time.
+- Develop a recommender system that suggests menu adjustments based on existing items and restaurant type\
+- Build a data pipeline that continuously ingests new data to enhance the model’s accuracy and relevance over time.
 
 ## Solution Overview
 
@@ -104,7 +100,7 @@ To make these datasets work together, we need to:
 
 The final output is a unified and cleaned dataset enriched with relevant features such as item frequency, price, and standardized names, laying the groundwork for our Recommender Module.
 
-## Recommender Module
+### Recommender Module
 
 The recommender system operates through the following four steps:
 
@@ -136,7 +132,7 @@ The recommender system operates through the following four steps:
 4.  **Recommendation**\
     After computing the popularity scores for each menu item, a ranked list to identify top and underperforming dishes is provided.
 
-### Example Use Case
+#### Example Use Case
 
 For instance, if a restaurant uploads its menu and includes “Hawaiian Pizza,” the system:
 
@@ -156,10 +152,14 @@ The anticipated business impact includes:
 -   Supporting smarter menu decisions and client retention\
 -   Strengthening Heymate’s value proposition as a data-driven platform partner
 
+### Success Criteria
+
+The project will be considered successful if internal tests using Heymate’s internal dataset sample produce results that align with business expectations, and the visualization demo operates as intended. Furthermore, the popularity scoring schema and recommender system will be delivered as open-ended, modular components, enabling Heymate to adapt and expand the solution in future development. 
+
 ## Project Timeline
 
 | Week     | Date      | Tasks                                                               |
-|-----------------|-----------------|--------------------------------------|
+|------------------|------------------|-------------------------------------|
 | Week 1   | May 5–9   | Proposal, Design Knowledge Base, Database setup                     |
 | Week 2–4 | May 12–30 | LLM research and tuning, workspace setup, API framework, core logic |
 | Week 5   | June 2–5  | Integration and modularization                                      |
