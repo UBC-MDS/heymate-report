@@ -20,15 +20,15 @@ def connect_to_sql_server():
 def read_dataframe_from_sql(query, conn):
     try:
         df = pd.read_sql(query, conn)
-        print(f"✅ Read {len(df)} rows from SQL Server.")
+        print(f"Read {len(df)} rows from SQL Server.")
         return df
     except Exception as e:
-        print(f"❌ Failed to read from SQL Server: {e}")
+        print(f"Failed to read from SQL Server: {e}")
         return pd.DataFrame()
 
 # --------------------------3. Get data batch from SQL Server -----------------------------
 def get_data_batch(start: int, end: int) -> pd.DataFrame:
-    conn, _ = connect_to_sql_server()
+    conn, cursor = connect_to_sql_server()
     query = f"""
     SELECT m.id AS item_id, m.menu_name AS item_name, m.menu_category, m.menu_item_description, m.restaurant_name, m.restaurant_id, r.restaurant_type
     FROM Menu_mds_sorted m
