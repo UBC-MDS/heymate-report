@@ -15,7 +15,6 @@ dependencies:
   - jupyterlab
   - matplotlib
   - seaborn
-  - pyodbc
   - sqlalchemy
   - tqdm
   - ipython
