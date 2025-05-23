@@ -10,6 +10,7 @@ dependencies:
   - python=3.10
   - pandas
   - numpy
+  - requests
   - ipykernel
   - jupyterlab
   - matplotlib
@@ -23,3 +24,4 @@ dependencies:
       - openai
       - python-dotenv
       - urllib3
+      - azure-functions
