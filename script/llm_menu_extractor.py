@@ -249,7 +249,7 @@ if __name__ == "__main__":
     # Example use case: direct DataFrame input
     df_example = pd.DataFrame([
         {
-            "row_id": "010",
+            "row_id": "001",
             "item_id": "1",
             "restaurant_name": "Pizza World",
             "restaurant_type": "Fast Food, Pizza",
