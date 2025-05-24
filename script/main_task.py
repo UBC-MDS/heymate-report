@@ -3,7 +3,7 @@ from sql_uploader import process_and_upload
 from llm_menu_extractor import run_qc_extraction
 from write_log import write_log
 
-def main_task(start_row_index: int, end_row_index: int, source: str):
+def main(start_row_index: int, end_row_index: int, source: str):
     try:
         df = get_data_batch(start_row_index, end_row_index, source)
         cleaned_results = run_qc_extraction(df)
@@ -26,5 +26,5 @@ if __name__ == "__main__":
     end_row_index = 3
     source = "training"
 
-    result = main_task(start_row_index, end_row_index, source)
+    result = main(start_row_index, end_row_index, source)
     print(result)
