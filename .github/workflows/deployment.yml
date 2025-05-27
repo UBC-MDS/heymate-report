@@ -43,7 +43,7 @@ jobs:
           python deployment_test.py
 
   deploy-to-azure:
-    needs: test-deployment  # Wait for testing job to complete
+    needs: test-deployment
     runs-on: ubuntu-latest
 
     steps:
@@ -53,6 +53,6 @@ jobs:
       - name: Deploy to Azure Function App
         uses: Azure/functions-action@v1
         with:
-          app-name: heymate-popularity-func  # Your Azure Function App name
+          app-name: heymate-popularity-func  # Must match exactly in Azure
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-          package: ./script # Deploy from root (adjust if function app is in subfolder)
+          package: .  # Adjust if your Function App root is elsewhere
