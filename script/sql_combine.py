@@ -18,10 +18,15 @@ def combine_with_metrics(cleaned_table: str = "cleaned_menu_mds") -> pd.DataFram
     conn, cursor = connect_to_sql_server()
 
     query = f"""
-    SELECT c.*, r.score, r.ratings
+    SELECT 
+    c.*, 
+    r.score, 
+    r.ratings,
+    COUNT(*) OVER (PARTITION BY c.dish_base, c.dish_flavor) AS frequency
     FROM {cleaned_table} c
     JOIN Menu_mds_sorted m ON c.row_id = m.row_id
     JOIN Restaurants_mds r ON m.restaurant_id = r.id
+    ORDER BY c.row_id ASC
     """
 
     df = read_dataframe_from_sql(query, conn)
