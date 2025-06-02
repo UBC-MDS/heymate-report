@@ -175,7 +175,7 @@ def process_and_upload(
         ]
 
         if not all(len(row) == 6 for row in cleaned):
-            raise ValueError("Some rows do not have exactly 5 fields.")
+            raise ValueError("Some rows do not have exactly 6 fields.")
 
         # Step 4: Upload
         cursor.executemany(
