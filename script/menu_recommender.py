@@ -27,6 +27,11 @@ def recommend_menu_items(type1: str, type2: str = None, type3: str = None, top_n
     df = read_dataframe_from_sql(query, conn)
     conn.close()
 
+    # Remove duplicates
+    df = df.sort_values("popularity_score", ascending=False).drop_duplicates(
+    subset=["restaurant_type_std", "dish_base", "dish_flavor"], keep="first"
+    )
+
     # Group by restaurant_type_std
     grouped = dict(tuple(df.groupby("restaurant_type_std")))
     selected_types = [t for t in [type1, type2, type3] if t is not None]
