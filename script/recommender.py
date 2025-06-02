@@ -5,7 +5,7 @@ from sql_reader import connect_to_sql_server, read_dataframe_from_sql
 from pprint import pprint
 
 
-def recommend_menu_items(cleaned_internal_menu_mds, cleaned_menu_mds, top_n=5):
+def recommend_menu_items(cleaned_menu_mds):
     df = combine_with_metrics(cleaned_menu_mds)
     recommendations = []
 
@@ -43,32 +43,4 @@ def recommend_menu_items(cleaned_internal_menu_mds, cleaned_menu_mds, top_n=5):
     return recommendations
 
 
-# ────────────────────────────────
-# 🚀 Quick test when run directly
-# ────────────────────────────────
-if __name__ == "__main__":
-    print("🔍 Running test of recommend_menu_items...\n")
 
-    # Step 1: Load from SQL
-    conn, cursor = connect_to_sql_server()
-
-    # Heymate internal data
-    internal_query = """
-    SELECT DISTINCT restaurant_type_std
-    FROM cleaned_internal_menu_mds
-    """
-    cleaned_internal = read_dataframe_from_sql(internal_query, conn)
-
-    # Uber Eats data
-    uber_query = """
-    SELECT * FROM cleaned_menu_mds
-    """
-    cleaned_uber = read_dataframe_from_sql(uber_query, conn)
-
-    conn.close()
-
-    # Step 2: Run recommender
-    results = recommend_menu_items(cleaned_internal, cleaned_uber, top_n=5)
-
-    # Step 3: Show sample output
-    pprint(results[:2])
