@@ -10,7 +10,7 @@ Note:
     - Designed to be deployed as part of an Azure Functions app with anonymous authentication.
 
     Example usage (HTTP GET):
-        /api/etl?start_row_index=0&end_row_index=100&source=training
+        /api/etl?start_row_index=1&end_row_index=100&source=training
 """
 
 import azure.functions as func
