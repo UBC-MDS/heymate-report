@@ -1,3 +1,18 @@
+"""
+Note:
+    This file provides a local Flask web server for triggering ETL (Extract, Transform, Load) tasks via an HTTP GET endpoint.
+
+    - Exposes the `/etl` route for local development and testing.
+    - Accepts `start_row_index`, `end_row_index`, and `source` as query parameters to control the ETL job.
+    - Uses `main_task.main` for processing and `write_log` for status logging.
+    - Returns plain text logs on success, or JSON error responses on failure.
+    - Intended for local use only. For cloud deployment, see the Azure Functions version.
+
+    To run locally:
+        $ python local_deploy.py
+        # Then visit: http://127.0.0.1:8181/etl?start_row_index=1&end_row_index=100&source=training
+"""
+
 from flask import Flask, request, jsonify, Response
 
 from main_task import main
