@@ -15,21 +15,32 @@ We conduct comprehensive data validation, enrichment, and exploratory analysis o
 
 ## 🚀 How to Run the Recommender System
 Follow these steps to test the recommender module locally.
-### 1. Activate the Environment
+
+### 1. Set up Credentials
+You need to create the `credentials` folder and add the `.env` and `open_ai_token.txt` files.
+You can refer to the templates in the `credentials_template` folder.
+
+### 2. Activate the Environment
 Make sure you are in the correct conda environment:
 ```bash
 conda activate heymate-mds-data-clean-pipeline
 ```
 
-### 2. Run the Recommendation Script (CLI)
-To test the recommender logic for a given restaurant type:
-
+### 3. Load more training data (if needed)
+If you want to load and clean additional data, you can activate the local server and make HTTP requests to invoke the tasks.
 ```bash
 cd script
-python menu_recommender.py
+python local_deploy.py
 ```
-This will output the top N recommended dishes based on popularity scores for the selected restaurant types. You can modify type1, type2, and type3 in menu_recommender.py to test different use cases.
+you can find more details in [task_invoker notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/task_invoker.ipynb).
 
+### 4. Make recommendation
+
+To generate recommendations for a given restaurant type, refer to the [visualization notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization.ipynb).
+
+You can choose three types: `type1`, `type2`, and `type3`.
+
+This will output the top N recommended dishes based on popularity scores for the selected restaurant types and visualize the results in a bar chart.
 
 
 
