@@ -1,3 +1,8 @@
+# This script handles computing and uploading popularity scores to SQL Server.
+# It combines cleaned menu data with restaurant metrics, calculates a weighted score, and stores the result.
+# To use it, run `calculate_and_upload(truncate=True)` to recompute and upload the popularity table.
+# Target table: cleaned_menu_with_popularity → used for powering the recommendation system.
+
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sql_reader import connect_to_sql_server, read_dataframe_from_sql

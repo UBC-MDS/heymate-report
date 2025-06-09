@@ -1,3 +1,8 @@
+# This script provides utilities to connect to SQL Server and retrieve data as pandas DataFrames.
+# It includes functions for SQL connection setup, executing queries, and fetching row-based batches.
+# To use it, call `connect_to_sql_server()` to establish connection, or `get_data_batch(start, end, source)` to retrieve row ranges.
+# Supported sources: "training" or "testing" → mapped to Menu_mds_sorted or Internal_menu_mds respectively.
+
 import os
 import pymssql
 import pandas as pd

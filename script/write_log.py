@@ -1,8 +1,33 @@
+# This script logs ETL batch processing status to the SQL Server table `Log_mds`.
+# It captures row range, source, status, optional message, and a UTC timestamp.
+# To use it, call `write_log(start_row_index, end_row_index, source, status, message=None)`
+# Example status values include: 'started', 'success', or 'error'.
+
 from sql_reader import connect_to_sql_server
 from sql_uploader import create_table_if_not_exists
 from datetime import datetime, timezone
 
 def write_log(start_row_index, end_row_index, source, status, message=None):
+    """
+    Write a log entry to the Log_mds table in SQL Server.
+
+    Parameters
+    ----------
+    start_row_index : int
+        The starting index of the processed data batch.
+    end_row_index : int
+        The ending index of the processed data batch.
+    source : str
+        The name or tag of the data source being processed (e.g., 'training').
+    status : str
+        Status of the ETL operation (e.g., 'started', 'completed', 'failed').
+    message : str, optional
+        Optional descriptive message or error information for the log.
+
+    Returns
+    -------
+    None
+    """
     table_name = "Log_mds"
     conn, cursor = connect_to_sql_server()
 
