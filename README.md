@@ -13,38 +13,24 @@ We conduct comprehensive data validation, enrichment, and exploratory analysis o
 - Scoring menu item popularity  
 - Building a pipeline to deliver actionable insights to restaurant clients  
 
-## How to Run the Analysis
-To render the Heymate recommendation proposal report on your local machine, follow these steps:
+## 🚀 How to Run the Recommender System
+Follow these steps to test the recommender module locally.
+### 1. Activate the Environment
+Make sure you are in the correct conda environment:
+```bash
+conda activate heymate-mds-data-clean-pipeline
+```
 
-### 1. Check if Quarto is Installed
-
-Open your terminal or RStudio terminal and run:
+### 2. Run the Recommendation Script (CLI)
+To test the recommender logic for a given restaurant type:
 
 ```bash
-quarto check
+cd script
+python menu_recommender.py
 ```
-If you see a version number, Quarto is installed.  
-If not, download and install [Quarto](https://quarto.org/)
+This will output the top N recommended dishes based on popularity scores for the selected restaurant types. You can modify type1, type2, and type3 in menu_recommender.py to test different use cases.
 
-### 2. **Clone the Repository**:
-```bash
-git clone https://github.com/your-org/heymate-report.git
-cd heymate-report
-```
 
-### 3. **Open in RStudio or VS Code**:
-Open the project in RStudio or VS Code and navigate to the report folder:
-```r
-YOUR-PATH/heymate-report/report/heymate-report.qmd
-```
 
-### 4. **Install R Dependencies**:
-In your R console, install the required packages:
-```r
-install.packages(c("readr", "dplyr", "tibble", "knitr"))
-```
 
-### 5. **In the terminal, run**:
-```bash
-quarto render report/heymate-report.qmd --to pdf
-```
+
