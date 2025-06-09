@@ -1,3 +1,8 @@
+# This script handles uploading cleaned menu data to SQL Server.
+# It includes utilities for table creation, truncation, dataframe cleaning, and bulk insert.
+# To use it, call `process_and_upload(cleaned_results, source, table_name=None, truncate=False)`
+# Supported sources: "training" or "testing" → writes to appropriate default table if table_name is not provided.
+
 import os
 import pymssql
 import pandas as pd

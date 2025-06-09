@@ -1,3 +1,8 @@
+# This script generates top menu recommendations based on popularity scores.
+# It filters cleaned menu records by restaurant types, averages popularity, and returns top results.
+# To use it, call `recommend_menu_items(type1, type2=None, type3=None, top_n=10)`
+# Requires SQL table: cleaned_menu_with_popularity → containing dish info and popularity scores.
+
 import pandas as pd
 from sql_reader import connect_to_sql_server, read_dataframe_from_sql
 
