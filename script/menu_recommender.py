@@ -75,13 +75,19 @@ def recommend_menu_items(type1: str, type2: str = None, type3: str = None, top_n
     type3 : str, optional
         Tertiary restaurant type.
     top_n : int
-        Number of top items to return.
+
+      Number of top items to return. Must be >= 4.
 
     Returns
     -------
     List[Dict]
         Top N recommended items based on averaged popularity scores.
     """
+
+
+    if top_n < 4:
+        raise ValueError("top_n must be at least 4")
+    
     # Connect and load table
     conn, _ = connect_to_sql_server()
     query = "SELECT * FROM cleaned_menu_with_popularity"
@@ -123,6 +129,7 @@ def recommend_menu_items(type1: str, type2: str = None, type3: str = None, top_n
 if __name__ == "__main__":
     # Test case with 3 types
     results = recommend_menu_items(type1="pizza restaurant", type2="burger joint", type3="sandwich shop", top_n=10)
+
     print("Top Recommendations:")
     for item in results:
         print(f"- {item['dish_base']} ({item['dish_flavor']}) → Popularity Score: {item['popularity_score']:.3f}")
