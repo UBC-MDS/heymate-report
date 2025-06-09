@@ -1,3 +1,7 @@
+# This script extracts and standardizes structured menu data from raw menu items using the OpenAI GPT API.
+# It can be used to process DataFrames of menu data and return cleaned JSON output for downstream analytics.
+# To use it, call `run_qc_extraction(df_input=your_dataframe)`. The output is a list of dictionaries with fields:
+##  'row_id', 'item_id', 'dish_base', 'dish_flavor', 'is_combo', and 'restaurant_type_std'.
 from typing import List, Dict, Any, Union, Iterable
 import pandas as pd
 import random
