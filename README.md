@@ -38,7 +38,7 @@ you can find more details in [task_invoker notebook](https://github.com/UBC-MDS/
 
 To generate recommendations for a given restaurant type, refer to the [visualization notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization.ipynb).
 
-You can choose three types: `type1`, `type2`, and `type3`.
+You can choose up to three types: `type1`, `type2`, and `type3`.
 
 This will output the top N recommended dishes based on popularity scores for the selected restaurant types and visualize the results in a bar chart.
 
