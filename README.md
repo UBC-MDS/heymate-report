@@ -13,6 +13,11 @@ We conduct comprehensive data validation, enrichment, and exploratory analysis o
 - Scoring menu item popularity  
 - Building a pipeline to deliver actionable insights to restaurant clients  
 
+## Reports
+- [Proposal](https://github.com/UBC-MDS/heymate-report/blob/main/proposal_report/proposal-report.pdf)
+- [Final Report](https://github.com/UBC-MDS/heymate-report/blob/main/final_report/final-report.pdf)
+- [Technical Report](https://github.com/UBC-MDS/heymate-report/blob/main/technical_report/technical-report.pdf).
+
 ## 🚀 How to Run the Recommender System
 Follow these steps to test the recommender module locally.
 
@@ -20,8 +25,12 @@ Follow these steps to test the recommender module locally.
 You need to create the `credentials` folder and add the `.env` and `open_ai_token.txt` files.
 You can refer to the templates in the `credentials_template` folder.
 
-### 2. Activate the Environment
-Make sure you are in the correct conda environment:
+### 2. Install and Activate the Environment
+To install the conda environment:
+```bash
+conda env create -f environment.yml
+```
+To activate conda environment:
 ```bash
 conda activate heymate-mds-data-clean-pipeline
 ```
