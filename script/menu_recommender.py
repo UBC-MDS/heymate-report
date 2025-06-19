@@ -4,7 +4,7 @@
 # Requires SQL table: cleaned_menu_with_popularity → containing dish info and popularity scores.
 
 import pandas as pd
-from sql_reader import connect_to_sql_server, read_dataframe_from_sql
+from util_database_reader import connect_to_sql_server, read_dataframe_from_sql
 
 def recommend_menu_items(type1: str, type2: str = None, type3: str = None, top_n: int = 10):
     """

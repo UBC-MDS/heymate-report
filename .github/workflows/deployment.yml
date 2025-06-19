@@ -45,4 +45,4 @@ jobs:
         shell: bash -l {0}
         run: |
           cd script
-          python deployment_test.py
+          python credential_validation_test_unit.py

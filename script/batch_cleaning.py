@@ -3,10 +3,10 @@
 # To use it, call `main(start_row_index, end_row_index, source)`
 # Supported sources: "training" or "testing" → determines which table to read from and write to.
 
-from sql_reader import get_data_batch
-from sql_uploader import process_and_upload
-from llm_menu_extractor import run_qc_extraction
-from write_log import write_log
+from util_database_reader import get_data_batch
+from util_database_uploader import process_and_upload
+from util_llm_data_cleaner import run_qc_extraction
+from util_task_logger import write_log
 
 def main(start_row_index: int, end_row_index: int, source: str):
     """

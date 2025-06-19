@@ -3,8 +3,8 @@
 # To use it, call `write_log(start_row_index, end_row_index, source, status, message=None)`
 # Example status values include: 'started', 'success', or 'error'.
 
-from sql_reader import connect_to_sql_server
-from sql_uploader import create_table_if_not_exists
+from util_database_reader import connect_to_sql_server
+from util_database_uploader import create_table_if_not_exists
 from datetime import datetime, timezone
 
 def write_log(start_row_index, end_row_index, source, status, message=None):
