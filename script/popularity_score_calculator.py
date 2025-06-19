@@ -1,12 +1,12 @@
-# This script handles computing and uploading popularity scores to SQL Server.
-# It combines cleaned menu data with restaurant metrics, calculates a weighted score, and stores the result.
+# This script handles computing and uploading popularity scores to the materialized view in SQL Server.
+# It combines cleaned menu data with restaurant metrics, calculates a weighted score, and stores the results.
 # To use it, run `calculate_and_upload(truncate=True)` to recompute and upload the popularity table.
-# Target table: cleaned_menu_with_popularity → used for powering the recommendation system.
+# Target table: cleaned_menu_with_popularity — used to power the recommendation system.
 
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from sql_reader import connect_to_sql_server, read_dataframe_from_sql
-from sql_uploader import create_table_if_not_exists, truncate_table
+from util_database_reader import connect_to_sql_server, read_dataframe_from_sql
+from util_database_uploader import create_table_if_not_exists, truncate_table
 
 def combine_with_metrics(cleaned_table: str = "cleaned_menu_mds") -> pd.DataFrame:
     """
@@ -93,6 +93,7 @@ def calculate_and_upload(truncate: bool = False):
 
     # Upload to SQL Server
     conn, cursor = connect_to_sql_server()
+    print('Task Running...')
     try:
         create_table_if_not_exists(cursor, conn, table_name, schema_sql)
 
@@ -109,8 +110,10 @@ def calculate_and_upload(truncate: bool = False):
         cursor.executemany(insert_sql, records)
         conn.commit()
         print(f"Uploaded {len(records)} rows to {table_name}")
+        print('Task Completed')
     except Exception as e:
         conn.rollback()
+        print('Task Failed')
         raise RuntimeError(f"Upload failed: {e}")
     finally:
         conn.close()

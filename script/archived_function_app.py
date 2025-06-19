@@ -16,8 +16,8 @@ Note:
 import azure.functions as func
 import logging
 
-from main_task import main
-from write_log import write_log
+from script.batch_cleaning import main
+from script.util_task_logger import write_log
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 @app.route(route="etl")

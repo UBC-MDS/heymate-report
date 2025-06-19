@@ -15,8 +15,8 @@ Note:
 
 from flask import Flask, request, jsonify, Response
 
-from main_task import main
-from write_log import write_log
+from batch_cleaning import main
+from util_task_logger import write_log
 
 app = Flask(__name__)
 

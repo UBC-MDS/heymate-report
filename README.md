@@ -39,13 +39,13 @@ conda activate heymate-mds-data-clean-pipeline
 If you want to load and clean additional data, you can activate the local server and make HTTP requests to invoke the tasks.
 ```bash
 cd script
-python local_deploy.py
+python flask_deploy.py
 ```
-you can find more details in [task_invoker notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/task_invoker.ipynb).
+you can find more details in [knowledge_base_update notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/knowledge_base_update.ipynb).
 
 ### 4. Make recommendation
 
-To generate recommendations for a given restaurant type, refer to the [visualization notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization.ipynb).
+To generate recommendations for a given restaurant type, refer to the [visualization_demo notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization_demo.ipynb).
 
 You can choose up to three types: `type1`, `type2`, and `type3`.
 

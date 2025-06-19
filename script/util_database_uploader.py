@@ -7,7 +7,7 @@ import os
 import pymssql
 import pandas as pd
 import numpy as np
-from sql_reader import connect_to_sql_server
+from util_database_reader import connect_to_sql_server
 
 # --------------------------------1. Create table if not exist-----------------------------
 def create_table_if_not_exists(cursor, conn, table_name, schema_sql):
