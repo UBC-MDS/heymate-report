@@ -1,3 +1,18 @@
+"""
+Note:
+    Reminder: Azure deployment has currently been paused due to technical challenges.
+    
+    This file defines an Azure Functions HTTP-triggered endpoint for ETL operations.
+
+    - Exposes an HTTP route (`/etl`) that accepts `start_row_index`, `end_row_index`, and `source` as query parameters.
+    - Logs the start and completion status of each ETL job for monitoring and debugging.
+    - Calls the main ETL processing logic in `main_task.main`, and logs results using `write_log`.
+    - Designed to be deployed as part of an Azure Functions app with anonymous authentication.
+
+    Example usage (HTTP GET):
+        /api/etl?start_row_index=1&end_row_index=100&source=training
+"""
+
 import azure.functions as func
 import logging
 

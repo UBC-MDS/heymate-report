@@ -13,38 +13,35 @@ We conduct comprehensive data validation, enrichment, and exploratory analysis o
 - Scoring menu item popularity  
 - Building a pipeline to deliver actionable insights to restaurant clients  
 
-## How to Run the Analysis
-To render the Heymate recommendation proposal report on your local machine, follow these steps:
+## 🚀 How to Run the Recommender System
+Follow these steps to test the recommender module locally.
 
-### 1. Check if Quarto is Installed
+### 1. Set up Credentials
+You need to create the `credentials` folder and add the `.env` and `open_ai_token.txt` files.
+You can refer to the templates in the `credentials_template` folder.
 
-Open your terminal or RStudio terminal and run:
-
+### 2. Activate the Environment
+Make sure you are in the correct conda environment:
 ```bash
-quarto check
+conda activate heymate-mds-data-clean-pipeline
 ```
-If you see a version number, Quarto is installed.  
-If not, download and install [Quarto](https://quarto.org/)
 
-### 2. **Clone the Repository**:
+### 3. Load more training data (if needed)
+If you want to load and clean additional data, you can activate the local server and make HTTP requests to invoke the tasks.
 ```bash
-git clone https://github.com/your-org/heymate-report.git
-cd heymate-report
+cd script
+python local_deploy.py
 ```
+you can find more details in [task_invoker notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/task_invoker.ipynb).
 
-### 3. **Open in RStudio or VS Code**:
-Open the project in RStudio or VS Code and navigate to the report folder:
-```r
-YOUR-PATH/heymate-report/report/heymate-report.qmd
-```
+### 4. Make recommendation
 
-### 4. **Install R Dependencies**:
-In your R console, install the required packages:
-```r
-install.packages(c("readr", "dplyr", "tibble", "knitr"))
-```
+To generate recommendations for a given restaurant type, refer to the [visualization notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization.ipynb).
 
-### 5. **In the terminal, run**:
-```bash
-quarto render report/heymate-report.qmd --to pdf
-```
+You can choose up to three types: `type1`, `type2`, and `type3`.
+
+This will output the top N recommended dishes based on popularity scores for the selected restaurant types and visualize the results in a bar chart.
+
+
+
+
