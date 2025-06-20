@@ -13,6 +13,11 @@ We conduct comprehensive data validation, enrichment, and exploratory analysis o
 - Scoring menu item popularity  
 - Building a pipeline to deliver actionable insights to restaurant clients  
 
+## 📝 Reports
+- [Proposal](https://github.com/UBC-MDS/heymate-report/blob/main/proposal_report/proposal-report.pdf)
+- [Final Report](https://github.com/UBC-MDS/heymate-report/blob/main/final_report/final-report.pdf)
+- [Technical Report](https://github.com/UBC-MDS/heymate-report/blob/main/technical_report/technical-report.pdf)
+
 ## 🚀 How to Run the Recommender System
 Follow these steps to test the recommender module locally.
 
@@ -20,8 +25,12 @@ Follow these steps to test the recommender module locally.
 You need to create the `credentials` folder and add the `.env` and `open_ai_token.txt` files.
 You can refer to the templates in the `credentials_template` folder.
 
-### 2. Activate the Environment
-Make sure you are in the correct conda environment:
+### 2. Install and Activate the Environment
+To install the conda environment:
+```bash
+conda env create -f environment.yml
+```
+To activate the conda environment:
 ```bash
 conda activate heymate-mds-data-clean-pipeline
 ```
@@ -30,13 +39,13 @@ conda activate heymate-mds-data-clean-pipeline
 If you want to load and clean additional data, you can activate the local server and make HTTP requests to invoke the tasks.
 ```bash
 cd script
-python local_deploy.py
+python flask_deploy.py
 ```
-you can find more details in [task_invoker notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/task_invoker.ipynb).
+you can find more details in [knowledge_base_update notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/knowledge_base_update.ipynb).
 
 ### 4. Make recommendation
 
-To generate recommendations for a given restaurant type, refer to the [visualization notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization.ipynb).
+To generate recommendations for a given restaurant type, refer to the [visualization_demo notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization_demo.ipynb).
 
 You can choose up to three types: `type1`, `type2`, and `type3`.
 

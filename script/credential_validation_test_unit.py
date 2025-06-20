@@ -7,8 +7,8 @@ Note:
     - Use this script as a basic deployment check before running production workloads.
 """
 
-from write_log import write_log
-from llm_menu_extractor import OpenAIConnector
+from util_task_logger import write_log
+from util_llm_data_cleaner import OpenAIConnector
 MODEL_NAME = "o4-mini"
 
 def test_openai_connector_token_valid():
@@ -19,9 +19,9 @@ def test_openai_connector_token_valid():
             input="say hello"
         )
         assert "hello" in output.output_text.lower()
-        return 'Open AI Verified'
+        return 'OpenAI API Token Verified'
     except Exception as e:
-        return 'Open AI Verification Falied'
+        return 'OpenAI API Token Verification Falied'
     
 msg = test_openai_connector_token_valid()
-write_log(0, 0, 'deployment_testing', status='success', message=msg)
+write_log(0, 0, 'OpenAI API Validation', status='success', message=msg)
