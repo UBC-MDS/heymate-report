@@ -17,13 +17,13 @@ format:
 
 ## Executive Summary
 
-This project supports our partner, Heymate, in delivering data-driven menu insights to their restaurant clients. Leveraging over 3 million popularity records and the power of large language models, we developed a structured data cleaning pipeline and generated a weighted scoring mechanisma  to identify top-performing dishes. The final product includes a scalable recommendation system that suggests the most popular menu items based on restaurant type, enabling merchants to optimize their offerings with minimal technical effort.
+This project supports our partner, Heymate, in delivering data-driven menu insights to their restaurant clients. Leveraging over 3 million popularity records and the power of large language models, we developed a structured data cleaning pipeline and generated a weighted scoring mechanism to identify top-performing dishes. The final product includes a scalable recommendation system that suggests the most popular menu items based on restaurant type, enabling merchants to optimize their offerings with minimal technical effort.
 
 ## Introduction
 
-Our capstone partner, Heymate, provides an all-in-one business management system, with the majority of its clients being restaurants. However, these restaurant owners constantly face the challenge of designing menus that align with customer preferences and evolving market trends due to the lack of access to broader market data. Our project aims to bridge that gap by transforming publicly available menu data into structured insights that can support data-informed menu design, enabling the partner to offer greater value to their clients through market-driven recommendations.
+Our capstone partner, Heymate, offers an all-in-one business management platform, primarily serving restaurant clients. However, many of these restaurant owners struggle to design menus that align with customer preferences and evolving market trends due to limited access to broader market data. Our project aims to bridge that gap by transforming publicly available menu data into structured insights that support data-informed menu design, enabling the partner to deliver greater value to its clients through market-driven recommendations.
 
-Our initial resource was internal database provided by Heymate, which contained thousands of raw menu records from their clients. However, the internal data alone was insufficient to support robust recommendation modeling due to limited scale of menu and trending information. To address this, we explored various open-source datasets, and found a menu dataset containing millions of menu records along with associated popularity metrics on Uber Eats (@sakib2023ubereats), making it a great data source in terms of scale, quality, and coverage.
+Our initial resource was internal database provided by Heymate, containing thousands of raw menu records from their clients. However, the internal data alone was insufficient to support robust recommendation modeling due to limited scale of menu and lack of trending information. To address this, we explored various open-source datasets, and found a menu dataset containing millions of menu records along with associated popularity metrics on Uber Eats (@sakib2023ubereats), making it a strong data source in terms of scale, quality, and coverage.
 
 However, messy data, large-scale datasets, and customized menu item names posed significant challenges to the construction of our recommendation system. Therefore, our scientific objective was to design an end-to-end pipeline that leverages diverse data science techniques to build a robust and scalable recommendation system, powered by a popularity-based knowledge base and capable of handling multi-type inputs.
 
@@ -33,7 +33,7 @@ However, messy data, large-scale datasets, and customized menu item names posed 
 
 Based on the project objective, we developed the following modular data pipeline framework: (@fig-data-pipeline-overview)
 
-![Data Pipeline Framework - The core recommender supported by two pipelines: one for modeling from market data, and another for generating recommendations based on input](../image/final_1_data_pipeline_overview.png){#fig-data-pipeline-overview width="80%" fig-align="center"}
+![Data Pipeline Framework - The core recommender supported by two pipelines: one for modeling from market data, and another for generating recommendations](../image/final_1_data_pipeline_overview.png){#fig-data-pipeline-overview width="80%" fig-align="center"}
 
 ### Model Input Pipeline (Horizontal Workflow)
 
@@ -190,8 +190,8 @@ Finally, the top N dishes (configurable) are returned as output.
 Currently, our system supports **structured filtering only** specifically, by one to three restaurant_type_std values (e.g. "pizza restaurant", "sandwich shop"). These types are extracted during LLM cleaning and matched exactly during the filtering process. This was inspired by best practices in popularity-based recommenders, which focus on transparency and operational simplicity in early-stage deployment @keshetti2020popularity.
 At this stage, we do **not** support:
 
-- Keyword-based filtering (e. searching for "pepperoni")
-- Semantic/embedding-based matching (e.g., interpreting "comfort food" or "something spicy")
+- Keyword-based filtering (e.g. searching for "pepperoni")
+- Semantic/embedding-based matching (e.g. interpreting "comfort food" or "something spicy")
 - GPT-powered fuzzy search at recommendation time
 
 This was a deliberate choice to prioritize __transparency, control,__ and __execution speed__ in our MVP. Additionally, our dataset, though enriched and cleaned, lacked consistent free-text queries or labelled user intent, which made implementing semantic search or GPT-based query interpretation less feasible at this stage.
