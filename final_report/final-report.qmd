@@ -141,7 +141,7 @@ At this stage, we:
 - This step allowed us to bring back three key popularity indicators that were temporarily removed during cleaning:
     - Number of Ratings: how many users rated the dish
     - Average Rating: the restaurant average rating score given by users
-    - Item Frequency: how often a dish appears, counting occurrences grouped by dish base, dish flavor, and restaurant type  
+    - Item Frequency: how often a dish appears, counting occurrences grouped by dish base, dish flavor, and restaurant type
 - We also removed entries where `is_combo == True` to avoid noise in popularity estimates.
 
 The resulting dataset forms the **core knowledge base**, a structured, popularity-aware version of Uber Eats data, on which all recommendations are based.
@@ -171,7 +171,6 @@ These weights were selected based on exploratory testing and domain intuition fr
 All computed scores are stored in a SQL table: `cleaned_menu_with_popularity`
 This becomes the knowledge base table used for filtering and recommendations.
 
-
 ### Group and Rank Dishes (Filtering & Output Logic)
 
 At recommendation time, the system:
@@ -187,7 +186,7 @@ Finally, the top N dishes (configurable) are returned as output.
 
 #### Clarification on Filtering Scope
 
-Currently, our system supports **structured filtering only** specifically, by one to three restaurant_type_std values (e.g. "pizza restaurant", "sandwich shop"). These types are extracted during LLM cleaning and matched exactly during the filtering process. This was inspired by best practices in popularity-based recommenders, which focus on transparency and operational simplicity in early-stage deployment @keshetti2020popularity.
+Currently, our system supports **structured filtering only** specifically, by one to three restaurant_type_std values (e.g. "pizza restaurant"). These types are extracted during LLM cleaning and matched exactly during the filtering process. This was inspired by best practices in popularity-based recommenders, which focus on transparency and operational simplicity in early-stage deployment @keshetti2020popularity.
 At this stage, we do **not** support:
 
 - Keyword-based filtering (e.g. searching for "pepperoni")
@@ -296,7 +295,7 @@ However, this approach has several clear limitations:
 ## Conclusions and Recommendations
 
 ### What Problem Were We Solving?
-Heymate! seeks to empower its restaurant partners by offering data-driven menu recommendations that encourage customer return visits. However, partners often lack clear insights into which menu items perform well across the market and why. Our project aimed to close this gap by designing a popularity-based recommendation system that scores dishes based on the number of ratings, average rating scores, and frequency across menus, offering partners a transparent foundation for data-backed decision-making.
+Heymate seeks to empower its restaurant partners by offering data-driven menu recommendations that encourage customer return visits. However, partners often lack clear insights into which menu items perform well across the market and why. Our project aimed to close this gap by designing a popularity-based recommendation system that scores dishes based on the number of ratings, average rating scores, and frequency across menus, offering partners a transparent foundation for data-backed decision-making.
 
 ### How Does Our Solution Address It?
 We developed a full-stack pipeline that:
@@ -313,9 +312,9 @@ This product functions well as a minimum viable recommendation engine, particula
 
 While our data product offers a practical solution for transforming raw menu data into structured insights, several limitations remain:
 
-- **Popularity Bias:** Our current popularity scoring system relies on static metrics, such as item frequency or appearance across menus, due to the lack of real transaction data. This makes it a proxy measure and may not fully reflect true customer preferences. The score could be further improved by incorporating additional quantitative features like price, review volume, or order frequency if available in the future.
+- **Popularity Bias:** Our current popularity scoring system relies on static metrics due to the lack of real transaction data. This makes it a proxy measure and may not fully reflect true customer preferences. The score could be further improved by incorporating additional quantitative features like price, review volume, or order frequency if available in the future.
 - **Static Reference:** Our analysis is currently based on static snapshots of menu data. Without timestamped records, we are unable to capture how item popularity or menu composition evolves. This limits our ability to detect trends such as seasonal specials or emerging bestsellers.
-- **Hard Filtering:** Restaurant type filtering is an exact match only (e. “pizza restaurant”), limiting support for broader or fuzzy queries like “comfort food” or “date night meals”. A more flexible filtering mechanism could improve the versatility of the tool.
+- **Hard Filtering:** Restaurant type filtering is an exact match only (e.g. “pizza restaurant”), limiting support for broader or fuzzy queries like “comfort food” or “date night meals”. A more flexible filtering mechanism could improve the versatility of the tool.
 - **Evaluation Challenge:** Due to limited deployment and lack of real-time feedback from users, our validation process is based on illustrative case studies (e.g. the pizza restaurant example). While useful for demonstration, A/B testing or real user feedback would be necessary to confirm the real-world effectiveness of the tool.
 - **Scalability Constraint:** Although our local pipeline performs well, we haven’t deployed it to Azure yet due to resource and security constraints. As a result, the system is not yet scalable enough for real-time or production use cases.
 - **Lack of Granular Personalization:** While our system standardizes restaurant types (e.g. “Chinese restaurant”), it does not yet support finer-grained classification at the sub-type level (e.g. “Szechuan,” “Cantonese”). Additionally, the recommender ignores important factors such as local popularity, pricing, and user-specific preferences. These limitations reduce the system’s ability to deliver tailored insights for diverse audiences.

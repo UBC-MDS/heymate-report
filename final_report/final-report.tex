@@ -642,7 +642,7 @@ enriching this data with relevant popularity metrics. At this stage, we:
     Average Rating: the restaurant average rating score given by users
   \item
     Item Frequency: how often a dish appears, counting occurrences
-    grouped by dish base, dish flavor, and restaurant type\\
+    grouped by dish base, dish flavor, and restaurant type
   \end{itemize}
 \item
   We also removed entries where \texttt{is\_combo\ ==\ True} to avoid
@@ -741,11 +741,11 @@ Scope}\label{clarification-on-filtering-scope}
 
 Currently, our system supports \textbf{structured filtering only}
 specifically, by one to three restaurant\_type\_std values (e.g.~``pizza
-restaurant'', ``sandwich shop''). These types are extracted during LLM
-cleaning and matched exactly during the filtering process. This was
-inspired by best practices in popularity-based recommenders, which focus
-on transparency and operational simplicity in early-stage deployment
-Sreekala (2020). At this stage, we do \textbf{not} support:
+restaurant''). These types are extracted during LLM cleaning and matched
+exactly during the filtering process. This was inspired by best
+practices in popularity-based recommenders, which focus on transparency
+and operational simplicity in early-stage deployment Sreekala (2020). At
+this stage, we do \textbf{not} support:
 
 \begin{itemize}
 \tightlist
@@ -1043,14 +1043,14 @@ Recommendations}\label{conclusions-and-recommendations}
 \subsection{What Problem Were We
 Solving?}\label{what-problem-were-we-solving}
 
-Heymate! seeks to empower its restaurant partners by offering
-data-driven menu recommendations that encourage customer return visits.
-However, partners often lack clear insights into which menu items
-perform well across the market and why. Our project aimed to close this
-gap by designing a popularity-based recommendation system that scores
-dishes based on the number of ratings, average rating scores, and
-frequency across menus, offering partners a transparent foundation for
-data-backed decision-making.
+Heymate seeks to empower its restaurant partners by offering data-driven
+menu recommendations that encourage customer return visits. However,
+partners often lack clear insights into which menu items perform well
+across the market and why. Our project aimed to close this gap by
+designing a popularity-based recommendation system that scores dishes
+based on the number of ratings, average rating scores, and frequency
+across menus, offering partners a transparent foundation for data-backed
+decision-making.
 
 \subsection{How Does Our Solution Address
 It?}\label{how-does-our-solution-address-it}
@@ -1088,12 +1088,11 @@ menu data into structured insights, several limitations remain:
 \tightlist
 \item
   \textbf{Popularity Bias:} Our current popularity scoring system relies
-  on static metrics, such as item frequency or appearance across menus,
-  due to the lack of real transaction data. This makes it a proxy
-  measure and may not fully reflect true customer preferences. The score
-  could be further improved by incorporating additional quantitative
-  features like price, review volume, or order frequency if available in
-  the future.
+  on static metrics due to the lack of real transaction data. This makes
+  it a proxy measure and may not fully reflect true customer
+  preferences. The score could be further improved by incorporating
+  additional quantitative features like price, review volume, or order
+  frequency if available in the future.
 \item
   \textbf{Static Reference:} Our analysis is currently based on static
   snapshots of menu data. Without timestamped records, we are unable to
@@ -1102,9 +1101,10 @@ menu data into structured insights, several limitations remain:
   bestsellers.
 \item
   \textbf{Hard Filtering:} Restaurant type filtering is an exact match
-  only (e. ``pizza restaurant''), limiting support for broader or fuzzy
-  queries like ``comfort food'' or ``date night meals''. A more flexible
-  filtering mechanism could improve the versatility of the tool.
+  only (e.g.~``pizza restaurant''), limiting support for broader or
+  fuzzy queries like ``comfort food'' or ``date night meals''. A more
+  flexible filtering mechanism could improve the versatility of the
+  tool.
 \item
   \textbf{Evaluation Challenge:} Due to limited deployment and lack of
   real-time feedback from users, our validation process is based on
