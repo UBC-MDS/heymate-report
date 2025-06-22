@@ -18,6 +18,7 @@ We conduct comprehensive data validation, enrichment, and exploratory analysis o
 - [Final Report](https://github.com/UBC-MDS/heymate-report/blob/main/final_report/final-report.pdf)
 - [Technical Report](https://github.com/UBC-MDS/heymate-report/blob/main/technical_report/technical-report.pdf)
 
+## Getting Started
 
 ### 1. Clone the Repository
 To get started, clone the repository to your local machine
