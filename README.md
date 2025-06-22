@@ -123,13 +123,13 @@ Please do not reuse or redistribute any part of this project without written per
 ## Acknowledgements
 We would like to thank our project partner, Heymate!, for providing the data and support necessary to complete this project.  
 We also appreciate the guidance and feedback from our course instructors and peers throughout the project. 
- 
+
 ## Contact
 For any questions or inquiries about this project, please contact the authors:
-- Hankun Xiao: [LinkedIn](https://www.linkedin.com/in/hankun-xiao-0b1a6a1b2/)
-- Yasmin Hassan: [LinkedIn](https://www.linkedin.com/in/yasmin-hassan-0b1a6a1b2/)
-- Jiaxin Zhang: [LinkedIn](https://www.linkedin.com/in/jiaxin-zhang-0b1a6a1b2/)
-- Zhiwei Zhang
+- Hankun Xiao: [Github](https://github.com/hankunxiao)
+- Yasmin Hassan: [Github](https://github.com/yasmin2424)
+- Jiaxin Zhang: [Github](https://github.com/jessiezhang24)
+- Zhiwei Zhang: [Github](https://github.com/gracez-20)
 
 
 
