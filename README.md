@@ -13,10 +13,6 @@ We conduct comprehensive data validation, enrichment, and exploratory analysis o
 - Scoring menu item popularity  
 - Building a pipeline to deliver actionable insights to restaurant clients  
 
-## 📝 Reports
-- [Proposal](https://github.com/UBC-MDS/heymate-report/blob/main/proposal_report/proposal-report.pdf)
-- [Final Report](https://github.com/UBC-MDS/heymate-report/blob/main/final_report/final-report.pdf)
-- [Technical Report](https://github.com/UBC-MDS/heymate-report/blob/main/technical_report/technical-report.pdf)
 
 ## Getting Started
 
@@ -55,30 +51,31 @@ python flask_deploy.py
 ```
 you can find more details in [knowledge_base_update notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/knowledge_base_update.ipynb).
 
-## How to Reproduce the Final Report
 
-To generate the **final report** in both PDF and HTML format using Quarto, follow these steps:
+## 📝 Reports and Reproducibility
 
-### 1. Navigate to the Report Directory
+### Available Reports
+- [Proposal](https://github.com/UBC-MDS/heymate-report/blob/main/proposal_report/proposal-report.pdf)
+- [Final Report](https://github.com/UBC-MDS/heymate-report/blob/main/final_report/final-report.pdf)
+- [Technical Report](https://github.com/UBC-MDS/heymate-report/blob/main/technical_report/technical-report.pdf)
+
+
+### How to Reproduce the Final Report
+
+To generate the **final report** in PDF format using Quarto, follow these steps:
+
+#### 1. Navigate to the Report Directory
 ```bash
 cd final_report
 ```
 
-### 2. Render the report in PDF format:
+#### 2. Render the report in PDF format:
 ```bash 
 quarto render final-report.qmd --to pdf
 ``` 
-### 3. Render the report in HTML format:
-```bash
-quarto render final-report.qmd --to html
-``` 
-### 4. View the generated report
-You can find the generated PDF and HTML files in the `final_report/` directory.
-To open the HTML/pdf report, double-click final-report.html/pdf in your file system or run:
-```bash
-open final-report.html
-```
-OR 
+#### 3. View the generated report
+You can find the generated PDF file in the `final_report/` directory.
+To open the pdf report, double-click final-report.pdf in your file system or run:
 ```bash
 open final-report.pdf
 ```
