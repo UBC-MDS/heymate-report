@@ -17,7 +17,7 @@ format:
 
 ## Executive Summary
 
-This project supports our partner, Heymate, in delivering data-driven menu insights to their restaurant clients. Leveraging over 3 million popularity records and the power of large language models, we developed a structured data cleaning pipeline and generated a weighted scoring mechanism to identify top-performing dishes. The final product includes a scalable recommendation system that suggests the most popular menu items based on restaurant type, enabling merchants to optimize their offerings with minimal technical effort.
+This project supports our partner, ["heymate!"](https://www.heymate.ca)(hereafter referred to as *Heymate*), in delivering data-driven menu insights to their restaurant clients. Leveraging over 3 million popularity records and the power of large language models, we developed a structured data cleaning pipeline and generated a weighted scoring mechanism to identify top-performing dishes. The final product includes a scalable recommendation system that suggests the most popular menu items based on restaurant type, enabling merchants to optimize their offerings with minimal technical effort.
 
 ## Introduction
 
