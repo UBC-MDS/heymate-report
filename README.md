@@ -27,7 +27,7 @@ cd heymate-report
 
 ### 2. Set up Credentials
 You need to create the `credentials` folder and add the `.env` and `open_ai_token.txt` files.
-You can refer to the templates in the `credentials_template` folder.
+You can refer to the templates in the `credentials_template` folder. Edit the files with the appropriate API keys and tokens. **Folder name should be `credentials` and not `credentials_template` and files should be named `.env` and `open_ai_token.txt` respectively.**
 
  **Note on Credentials**  
 Due to NDA agreements with Heymate, we are unable to share the actual API keys or `.env` contents publicly.  
@@ -51,6 +51,28 @@ python flask_deploy.py
 ```
 you can find more details in [knowledge_base_update notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/knowledge_base_update.ipynb).
 
+## 🚀 How to Run the Recommender System
+Follow these steps to test the recommender module locally.
+### 1. Navigate to the Script Directory
+```bash
+cd script
+```   
+### 2. Make sure you are in the conda environment
+```bash
+conda activate heymate-mds-data-clean-pipeline
+```
+### 3. To generate the recommendation results via script run:
+```bash
+python menu_recommender.py
+```
+
+### Visualize recommendation demo
+
+To generate and visualize recommendations for a given restaurant type, refer to the [visualization_demo notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization_demo.ipynb).
+
+You can choose up to three types: `type1`, `type2`, and `type3`.
+
+This will output the top N recommended dishes based on popularity scores for the selected restaurant types and visualize the results in a bar chart.
 
 ## 📝 Reports and Reproducibility
 
@@ -88,28 +110,6 @@ If you use conda, you can use this command:
 conda install -c conda-forge -c quarto
 ```
 
-## 🚀 How to Run the Recommender System
-Follow these steps to test the recommender module locally.
-### 1. Navigate to the Script Directory
-```bash
-cd script
-```   
-### 2. Make sure you are in the conda environment
-```bash
-conda activate heymate-mds-data-clean-pipeline
-```
-### 3. To generate the recommendation results via script run:
-```bash
-python menu_recommender.py
-```
-
-### Visualize recommendation demo
-
-To generate and visualize recommendations for a given restaurant type, refer to the [visualization_demo notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization_demo.ipynb).
-
-You can choose up to three types: `type1`, `type2`, and `type3`.
-
-This will output the top N recommended dishes based on popularity scores for the selected restaurant types and visualize the results in a bar chart.
 
 ## License
 
