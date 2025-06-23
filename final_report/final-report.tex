@@ -211,14 +211,16 @@
 
 \section{Executive Summary}\label{executive-summary}
 
-This project supports our partner, Heymate, in delivering data-driven
-menu insights to their restaurant clients. Leveraging over 3 million
-popularity records and the power of large language models, we developed
-a structured data cleaning pipeline and generated a weighted scoring
-mechanism to identify top-performing dishes. The final product includes
-a scalable recommendation system that suggests the most popular menu
-items based on restaurant type, enabling merchants to optimize their
-offerings with minimal technical effort.
+This project supports our partner,
+\href{https://www.heymate.ca}{``heymate!''}(hereafter referred to as
+\emph{Heymate}), in delivering data-driven menu insights to their
+restaurant clients. Leveraging over 3 million popularity records and the
+power of large language models, we developed a structured data cleaning
+pipeline and generated a weighted scoring mechanism to identify
+top-performing dishes. The final product includes a scalable
+recommendation system that suggests the most popular menu items based on
+restaurant type, enabling merchants to optimize their offerings with
+minimal technical effort.
 
 \section{Introduction}\label{introduction}
 
@@ -235,10 +237,13 @@ Our initial resource was internal database provided by Heymate,
 containing thousands of raw menu records from their clients. However,
 the internal data alone was insufficient to support robust
 recommendation modeling due to limited scale of menu and lack of
-trending information. To address this, we explored various open-source
-datasets, and found a menu dataset containing millions of menu records
-along with associated popularity metrics on Uber Eats (Sakib (2023)),
-making it a strong data source in terms of scale, quality, and coverage.
+trending information. Specifically, the internal dataset only includes
+around 300 restaurants, which limits its representativeness and
+diversity for building a generalizable recommendation system. To address
+this, we explored various open-source datasets, and found a menu dataset
+containing millions of menu records along with associated popularity
+metrics on Uber Eats (Sakib (2023)), making it a strong data source in
+terms of scale, quality, and coverage.
 
 However, messy data, large-scale datasets, and customized menu item
 names posed significant challenges to the construction of our
@@ -619,39 +624,26 @@ structured format suitable for downstream analysis and recommendation.
 
 \subsubsection{Feature Integration}\label{feature-integration}
 
-Once the LLM produces cleaned menu data (in table
-\texttt{cleaned\_menu\_mds}), we proceeded to feature integration,
-enriching this data with relevant popularity metrics. At this stage, we:
+Once the data cleaning module produces cleaned menu data (stored in
+\texttt{cleaned\_menu\_mds}), we enrich it by joining with the Uber Eats
+metadata table (\texttt{Restaurants\_mds}) to reintroduce three key
+popularity indicators that had been excluded during the cleaning phase:
 
 \begin{itemize}
 \tightlist
 \item
-  Joined the cleaned Uber Eats menu data (text data) with popularity
-  metrics in the original Uber Eats metadata table
-  \texttt{Restaurants\_mds}, which contains rating counts and rating
-  scores.
+  Number of Ratings: how many users rated the dish
 \item
-  This step allowed us to bring back three key popularity indicators
-  that were temporarily removed during cleaning:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Number of Ratings: how many users rated the dish
-  \item
-    Average Rating: the restaurant average rating score given by users
-  \item
-    Item Frequency: how often a dish appears, counting occurrences
-    grouped by dish base, dish flavor, and restaurant type
-  \end{itemize}
+  Average Rating: the restaurant average rating score given by users
 \item
-  We also removed entries where \texttt{is\_combo\ ==\ True} to avoid
-  noise in popularity estimates.
+  Item Frequency: how often a dish appears, counting occurrences grouped
+  by dish base, dish flavor, and restaurant type
 \end{itemize}
 
-The resulting dataset forms the \textbf{core knowledge base}, a
-structured, popularity-aware version of Uber Eats data, on which all
-recommendations are based.
+To ensure that combination meals don't distort the popularity signals,
+we filter out all entries flagged as combos
+(\texttt{is\_combo\ ==\ True}). The resulting dataset serves as the
+foundation for our \textbf{core knowledge base}.
 
 \subsection{Normalize Matrix}\label{normalize-matrix}
 
@@ -699,11 +691,12 @@ Al-Rubaye and Sukthankar (2020))
   perceived quality but is often biased by low volume.
 \item
   \textbf{20\% frequency: (\texttt{freq\_scaled})} reflects widespread
-  presence on menus but doesn't always indicate desirability.\\
-  All computed scores are stored in a SQL table:
-  \texttt{cleaned\_menu\_with\_popularity} This becomes the knowledge
-  base table used for filtering and recommendations.
+  presence on menus but doesn't always indicate desirability.
 \end{itemize}
+
+All computed scores are stored in a SQL table:
+\texttt{cleaned\_menu\_with\_popularity} This becomes the knowledge base
+table used for filtering and recommendations.
 
 \subsection{Group and Rank Dishes (Filtering \& Output
 Logic)}\label{group-and-rank-dishes-filtering-output-logic}
@@ -722,7 +715,7 @@ At recommendation time, the system:
   \begin{itemize}
   \tightlist
   \item
-    Exact matches on restaurant\_type\_std
+    Exact matches on \texttt{restaurant\_type\_std}
   \item
     Filters out duplicate dishes (e.g.~same base/flavor combo for the
     same type)
@@ -739,30 +732,27 @@ Finally, the top N dishes (configurable) are returned as output.
 \subsubsection{Clarification on Filtering
 Scope}\label{clarification-on-filtering-scope}
 
-Currently, our system supports \textbf{structured filtering only}
-specifically, by one to three restaurant\_type\_std values (e.g.~``pizza
-restaurant''). These types are extracted during LLM cleaning and matched
-exactly during the filtering process. This was inspired by best
-practices in popularity-based recommenders, which focus on transparency
-and operational simplicity in early-stage deployment Sreekala (2020). At
-this stage, we do \textbf{not} support:
+Our system currently supports \textbf{structured filtering only}, based
+on exact matches of up to three \texttt{restaurant\_type\_std} values
+(e.g., ``pizza restaurant'') extracted during LLM cleaning. This design
+prioritizes transparency, control, and speed, aligning with early-stage
+deployment best practices in popularity-based recommenders (Sreekala
+2020).
+
+At this stage, we \textbf{do not support}:
 
 \begin{itemize}
 \tightlist
 \item
-  Keyword-based filtering (e.g.~searching for ``pepperoni'')
+  Keyword-based filtering (e.g., ``pepperoni'')
 \item
-  Semantic/embedding-based matching (e.g.~interpreting ``comfort food''
-  or ``something spicy'')
+  Semantic matching (e.g., ``comfort food'')
 \item
-  GPT-powered fuzzy search at recommendation time
+  GPT-based fuzzy search
 \end{itemize}
 
-This was a deliberate choice to prioritize \textbf{transparency,
-control,} and \textbf{execution speed} in our MVP. Additionally, our
-dataset, though enriched and cleaned, lacked consistent free-text
-queries or labelled user intent, which made implementing semantic search
-or GPT-based query interpretation less feasible at this stage.
+These advanced features were deliberately excluded due to the lack of
+labeled user intent and to maintain a clear and efficient MVP.
 
 \section{Example Use Case: Recommending for a Pizza
 Restaurant}\label{example-use-case-recommending-for-a-pizza-restaurant}
@@ -823,105 +813,69 @@ Recommendations}\label{visualization-demo-surfacing-actionable-recommendations}
 To make our recommendation results interpretable and actionable, we
 built a two-part visualization:
 
-\subsubsection{CRM System Integration
-Mockup}\label{crm-system-integration-mockup}
-
-On the left of Figure~\ref{fig-viz-demo}, we show a conceptual UI for
-how this recommendation module could be embedded in the Heymate CRM by
-the Heymate engineering team. This allows restaurant managers to easily
-access insights from their dashboard, specifically under the
-``Recommendation'' tab, alongside other operational menus.
-
-\subsubsection{Recommendation Output
-Visualization}\label{recommendation-output-visualization}
-
-On the right of Figure~\ref{fig-viz-demo} is an Altair-based bar chart
-showcasing the top dishes sorted by computed popularity score. Key
-design features include:
-
 \begin{itemize}
 \tightlist
 \item
-  Top 3 highlights using Heymate brand colours (yellow, red, rose).
+  \textbf{CRM Integration Mockup (Left of Figure~\ref{fig-viz-demo}):} A
+  conceptual UI showing how Heymate's CRM can embed our recommender.
+  This allows managers to access top dish insights directly from their
+  dashboard.
 \item
-  Pop score bars are annotated directly with percentage labels.
-\item
-  Hover tooltips for dish name and score for ease of exploration.
-\item
-  Combined label (dish base + flavor) for intuitive comprehension.
-\end{itemize}
-
-This visualization not only validates that our scoring pipeline works
-but also provides a clear and professional way for stakeholders to
-compare and act on dish performance. It is also exportable as a
-standalone HTML component and ready for dashboard integration.
-
-\section{How to Use the Data Product}\label{how-to-use-the-data-product}
-
-We designed this data product to support Heymate's internal team and
-clients in making data-informed menu decisions.
-
-\subsection{Intended Usage}\label{intended-usage}
-
-Heymate can utilize this tool in two primary ways:
-
-\begin{itemize}
-\tightlist
-\item
-  Internal Use Mode:
+  \textbf{Altair Bar Chart (Right of Figure~\ref{fig-viz-demo}):} A
+  visual of top dishes sorted by popularity score. Features include:
 
   \begin{itemize}
   \tightlist
   \item
-    Data Update \& Validation: When a new data source becomes available,
-    the internal team can upload and process it through the system to
-    evaluate performance with updated inputs.
+    Heymate brand colors for top 3 dishes
   \item
-    Testing \& Iteration: By inputting internal client restaurant types,
-    internal users can assess the quality of dish name cleaning and
-    observe how the system generates standardized output. This enables
-    iterative refinement and ensures reliability before onboarding new
-    clients.
+    Percentage labels and hover tooltips for easy exploration
+  \item
+    Combined dish base and flavor names for clarity
   \end{itemize}
-\item
-  Client-Facing Deployment: On the frontend, a client can simply select
-  their restaurant type (e.g.~``pizza restaurant''), and the system
-  returns a list of top recommended dishes based on aggregated
-  popularity metrics from similar restaurants. This empowers merchants
-  to make data-driven menu decisions aligned with current market trends.
 \end{itemize}
 
-Overall speaking, to enable a scalable, end-to-end pipeline that
-supports both internal testing and client-facing deployment, we applied
-several key data science techniques. Below, we highlight three methods
-that were critical to addressing real-world data challenges.
+This design ensures our scoring pipeline results are both explainable
+and ready for integration.
+
+\section{How to Use the Data Product}\label{how-to-use-the-data-product}
+
+We designed this product to help Heymate and its clients make informed
+menu decisions.
+
+\subsection{Internal Use}\label{internal-use}
+
+To ensure robustness before onboarding new clients, this internal setup
+enables iterative refinement of the pipeline: - Data Updates: Heymate
+staff can upload new datasets to evaluate updates and improvements. -
+Testing \& QA: Input client restaurant types to verify dish name
+cleaning and recommendation logic.
+
+\subsection{Client Deployment}\label{client-deployment}
+
+To support merchants in aligning with current market trends, this tool
+enables data-driven menu decision-making: - Restaurant Type Input:
+Clients select a restaurant type (e.g., ``pizza restaurant''). -
+Recommended Output: The system returns a list of top recommended dishes
+based on aggregated popularity metrics from similar restaurants.
 
 \section{Data Science Methods}\label{data-science-methods}
 
-We applied many data science techniques in our capstone project and are
-highlighting 3 here:
-
-\begin{itemize}
-\tightlist
-\item
-  LLM Integration
-\item
-  Distributed Deployment
-\item
-  Materialized View
-\end{itemize}
+To build a scalable pipeline supporting both internal testing and client
+deployment, we applied three key data science techniques: \textbf{LLM
+Integration}, \textbf{Distributed Deployment}, and \textbf{Materialized
+View}. In the following sections, we describe how each method was
+applied, along with its limitations and alternative approaches
+considered.
 
 \subsection{LLM Integration}\label{llm-integration}
 
-We leveraged large language models (LLMs) to clean and standardize the
-menu data. The raw data was not available for direct use in our
-recommendation system due to inconsistencies in formatting, spelling
-variations, and the presence of multiple languages. By integrating LLMs,
-we were able to extract key information of dish bases and dish flavors,
-from item names, categories, and descriptions with high accuracy. Even
-in the case when the description is missing, the LLMs can still infer
-the information from the item name and category, as well as the context
-of the restaurant name.
+We used large language models (LLMs) to clean and standardize messy menu
+data. As discussed in the \hyperref[data-cleaning-module]{Data Cleaning
+Module}, the raw data was not available for direct use in our
+recommendation system. The LLM extracted core dish information (base,
+flavor, combo status, restaurant type) with high accuracy, even without
+full descriptions.
 
 \subsubsection{Limitation}\label{limitation}
 
@@ -942,28 +896,24 @@ Considered}\label{alternative-methods-considered}
   Custom Deep Learning Model: While potentially powerful, this would
   require labelled training data and significant time and computational
   resources. We don't have such resources within our project scope.
-\item
-  Locally Deployed LLM: This could reduce long-term costs, but setup and
-  maintenance would bring practical challenges within our capstone
-  timeline.
 \end{itemize}
 
 \subsection{Distributed Deployment}\label{distributed-deployment}
 
-Our project involved processing a large dataset, over 3 million rows
-from the Uber Eats dataset. Cleaning this data sequentially would have
-taken approximately 5,000 hours, which was not feasible within our
-timeline. To solve this, we implemented a distributed deployment
-infrastructure to significantly speed up processing. We designed and
-deployed an HTTP-triggered function to process data in batches. Each
-instance is triggered via a web request, with the batch range passed as
-parameters. The system logs the task status at both the start and end of
-execution. To monitor tasks internally, we also built a dashboard in
-Looker Studio. Initially, we planned to deploy using Azure Functions on
-our partner's cloud infrastructure. However, due to security
-configuration challenges, we were unable to proceed with this plan. As a
-fallback, we deployed the system locally using the Flask framework and
-ran up to 20 worker instances concurrently, achieving a 20x speedup.
+As mentioned in the \hyperref[exploratory-data-analysis]{Exploratory
+Data Analysis} section, the raw Uber Eats dataset originally contained
+over 5 million rows.To handle this volume efficiently within our project
+timeline, we implemented a distributed deployment infrastructure.
+Cleaning this dataset sequentially would have taken over 5,000 hours, so
+we built an HTTP-triggered batch-processing system using Flask. Each
+instance processed a defined batch, allowing up to 20 workers to run
+concurrently and achieving a 20x speedup.
+
+Originally, we planned to use Azure Functions, aligning with our
+partner's infrastructure, but security configuration issues prevented
+deployment. As a fallback, we deployed locally. A Looker Studio
+dashboard was also developed to monitor processing status and
+performance.
 
 \subsubsection{Limitation}\label{limitation-1}
 
@@ -982,32 +932,20 @@ Functions, once security configurations are in place.
 
 \subsection{Materialized View}\label{materialized-view}
 
-A Materialized View (also known as a Persistent Derived Table) is a
-database optimization technique that stores the result of a query as a
-physical table. This allows for much faster data retrieval by avoiding
-repeated computation over large datasets. Initially, it took around 6
-minutes to generate a restaurant recommendation due to the volume of
-data. Such delays are unacceptable in production, especially since the
-recommendation module will eventually be integrated into the partner's
-CRM system. To optimize query performance, we implemented a materialized
-view to cache pre-computed results. This optimization reduced runtime
-from 6 minutes to just 3 seconds.
+To speed up recommendations, we implemented a Materialized View, a
+database optimization technique that stores query results as a physical
+table, reducing query time from 6 minutes to 3 seconds and making the
+system suitable for integration into Heymate's CRM.
 
 \subsubsection{Limitations}\label{limitations}
 
 \begin{itemize}
 \tightlist
 \item
-  Additional Storage Cost: The materialized view aggregates data from
-  the original 3-million-row table, incurring some storage cost.
-  However, this is minimal relative to the base data and is not a major
-  concern.
+  Storage Cost: Adds minor overhead due to caching, but manageable.
 \item
-  Maintenance and Updates: When new data is ingested into the model
-  input pipeline, the materialized view must be refreshed. To handle
-  this, we established an automated workflow that updates the
-  materialized view upon the successful completion of each data
-  ingestion task.
+  Maintenance: Requires refresh after each data update. We automated
+  refreshment after each successful data ingestion.
 \end{itemize}
 
 \section{Justification Over Other
