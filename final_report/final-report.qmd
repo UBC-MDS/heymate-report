@@ -236,7 +236,7 @@ This approach requires payment for API usage. After evaluating trade-offs betwee
 
 As mentioned in the [Exploratory Data Analysis](#exploratory-data-analysis) section, the raw Uber Eats dataset originally contained over 5 million rows.To handle this volume efficiently within our project timeline, we implemented a distributed deployment infrastructure. Cleaning this dataset sequentially would have taken over 5,000 hours, so we built an HTTP-triggered batch-processing system using Flask. Each instance processed a defined batch, allowing up to 20 workers to run concurrently and achieving a 20x speedup.
 
-Originally, we planned to use Azure Functions, aligning with our partner’s infrastructure, but security configuration issues prevented deployment. As a fallback, we deployed locally. A Looker Studio dashboard was also developed to monitor processing status and performance.
+Originally, we planned to use Azure Functions following Developer Guide[@azurefunctions], aligning with our partner’s infrastructure, but security configuration issues prevented deployment. As a fallback, we deployed locally. A Looker Studio dashboard was also developed to monitor processing status and performance.
 
 #### Limitation
 The number of concurrent worker instances is limited by the ChatGPT API rate limit.

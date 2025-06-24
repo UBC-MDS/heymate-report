@@ -735,7 +735,7 @@ Recommendations}\label{visualization-demo-surfacing-actionable-recommendations}
 \end{figure}%
 
 To make our recommendation results interpretable and actionable, we
-built a two-part visualization:
+built a two-part visualization demo:
 
 \begin{itemize}
 \tightlist
@@ -743,7 +743,8 @@ built a two-part visualization:
   \textbf{CRM Integration Mockup (Left of Figure~\ref{fig-viz-demo}):} A
   conceptual UI showing how Heymate's CRM can embed our recommender.
   This allows managers to access top dish insights directly from their
-  dashboard.
+  dashboard.The Heymate engineering team plans to build this interface
+  in future development.
 \item
   \textbf{Altair Bar Chart (Right of Figure~\ref{fig-viz-demo}):} A
   visual of top dishes sorted by popularity score. Features include:
@@ -847,11 +848,11 @@ we built an HTTP-triggered batch-processing system using Flask. Each
 instance processed a defined batch, allowing up to 20 workers to run
 concurrently and achieving a 20x speedup.
 
-Originally, we planned to use Azure Functions, aligning with our
-partner's infrastructure, but security configuration issues prevented
-deployment. As a fallback, we deployed locally. A Looker Studio
-dashboard was also developed to monitor processing status and
-performance.
+Originally, we planned to use Azure Functions following Developer
+Guide(Microsoft 2024), aligning with our partner's infrastructure, but
+security configuration issues prevented deployment. As a fallback, we
+deployed locally. A Looker Studio dashboard was also developed to
+monitor processing status and performance.
 
 \subsubsection{Limitation}\label{limitation-1}
 
@@ -1038,6 +1039,10 @@ GitHub Repositories.''} \emph{IEEE}.
 \bibitem[\citeproctext]{ref-chitalia2023yelp}
 Chitalia, A. 2023. {``Yelp Popularity Score Calculator.''}
 \url{https://scholarworks.sjsu.edu/etd_projects/1261}.
+
+\bibitem[\citeproctext]{ref-azurefunctions}
+Microsoft. 2024. {``Azure Functions Python Developer Guide.''}
+\url{https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-python?tabs=get-started\%2Casgi\%2Capplication-level&pivots=python-mode-decorators}.
 
 \bibitem[\citeproctext]{ref-sakib2023ubereats}
 Sakib, Ahmed Shahriar. 2023. {``Uber Eats USA Restaurants and Menus.''}
