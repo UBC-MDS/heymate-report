@@ -1,6 +1,6 @@
 ---
 title: "Menu Engineering Supercharged"
-subtitle: "MDS Capstone Final Report"
+subtitle: "MDS Capstone Technical Report"
 author: Hankun Xiao, Yasmin Hassan, Jessie Zhang, Zhiwei Zhang
 bibliography: references.bib
 format:
