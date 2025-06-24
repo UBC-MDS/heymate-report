@@ -4,19 +4,15 @@
 This project aims to build a menu recommendation pipeline for Heymate's restaurant partners. By analyzing internal product, store, and category data along with external datasets we seek to provide insights into menu item popularity, pricing, and restaurant-specific recommendations. Our recommendations help partners optimize their offerings through data driven insights.
 ## Summary
 We conduct comprehensive data validation, enrichment, and exploratory analysis on restaurant menu data. Key steps include:
-
 - Cleaning inconsistent menu item names using LLMs
 - Merging external datasets (e.g. Kaggle)
 - Scoring menu item popularity
 - Building a pipeline to deliver actionable insights to restaurant clients
 ## Getting Started
-
-
 ### 1. Clone the Repository
 To get started, clone the repository to your local machine
-link to the repository:[Heymate Report](https://github.com/UBC-MDS/heymate-report)
+link to the repository:[Heymate Repo](https://github.com/UBC-MDS/heymate-report)
 You can use the following command in your terminal:
-
 ```shell script
 git clone git@github.com:UBC-MDS/heymate-report.git
 cd heymate-report
@@ -51,7 +47,6 @@ Follow these steps to set up your credentials:
    ```shell script
    cd ..
    ```
-
 ### 3. Install and Activate the Environment
 To install the conda environment:
 ```shell script
@@ -68,7 +63,6 @@ cd script
 python flask_deploy.py
 ```
 you can find more details in [knowledge_base_update notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/knowledge_base_update.ipynb).
-
 ## :rocket: How to Run the Recommender System
 Follow these steps to test the recommender module locally.
 ### 1. Navigate to the Script Directory
@@ -131,12 +125,10 @@ recommender_menu_items(type1="Mexican", type2="Korean", type3="French")
 **Note:** Ensure you're in the correct conda environment (`heymate-mds-data-clean-pipeline`) before running the notebook.
 For detailed instructions and examples, refer to the [visualization_demo notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization_demo.ipynb).
 ## :memo: Reports and Reproducibility
-
 ### Available Reports
 - [Proposal](https://github.com/UBC-MDS/heymate-report/blob/main/proposal_report/proposal-report.pdf)
 - [Final Report](https://github.com/UBC-MDS/heymate-report/blob/main/final_report/final-report.pdf)
-- [Technical Report](https://github.com/UBC-MDS/heymate-report/blob/main/technical_report/technical-report.pdf)
-
+- [Technical Report](https://github.com/UBC-MDS/heymate-report/blob/main/technical_report/technical_report.pdf)
 ### How to Reproduce the Final Report
 To generate the **final report** in PDF format using Quarto, follow these steps:
 Remember to cd out of the `script` directory if you are still in it.
@@ -155,19 +147,15 @@ quarto render final-report.qmd --to pdf
 You can find the generated PDF file in the `final_report/` directory.
 To open the pdf report, double-click final-report.pdf in your file system or run:
 ```shell script
-
 open final-report.pdf
 ```
 ### Prerequisites
 Ensure you have Quarto installed on your system if you haven't already. You can install it by following the instructions on the Quarto website:
 [Link](https://quarto.org/docs/get-started/)
-
-
 If you use conda, you can use this command:
 ```bash
 conda install -c conda-forge -c quarto
 ```
-
 ## License
 This project was developed as part of the UBC Master of Data Science (MDS) Capstone and is intended for academic purposes only.
 Some components, including API credentials and internal datasets from Heymate!, are subject to Non-Disclosure Agreements (NDAs) and are **not open-sourced**.
@@ -175,15 +163,9 @@ Please do not reuse or redistribute any part of this project without written per
 ## Acknowledgements
 We would like to thank our project partner, Heymate!, for providing the data and support necessary to complete this project.
 We also appreciate the guidance and feedback from our course instructors and peers throughout the project.
-
 ## Contact
 For any questions or inquiries about this project, please contact the authors:
 - Hankun Xiao: [Github](https://github.com/hankunxiao)
 - Yasmin Hassan: [Github](https://github.com/yasmin2424)
 - Jiaxin Zhang: [Github](https://github.com/jessiezhang24)
 - Zhiwei Zhang: [Github](https://github.com/gracez-20)
-
-
-
-
-
