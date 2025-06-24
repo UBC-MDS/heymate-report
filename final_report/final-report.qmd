@@ -221,7 +221,7 @@ To build a scalable pipeline supporting both internal testing and client deploym
 
 ### LLM Integration
 
-We used large language models (LLMs) to clean and standardize messy menu data. As discussed in the [Data Cleaning Module](#data-cleaning-module), the raw data was not available for direct use in our recommendation system. The LLM extracted core dish information (base, flavor, combo status, restaurant type) with high accuracy, even without full descriptions.
+We used large language models (LLMs) to clean and standardize messy menu data. As discussed in the [Data Cleaning Module](#data-cleaning-module), the raw data was not available for direct use in our recommendation system. The LLM efficiently extracted core dish information (including base, flavor, combo status, and restaurant type) even when descriptions were missing, enabling effective and streamlined data cleaning.
 
 #### Limitation
 
