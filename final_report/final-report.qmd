@@ -17,13 +17,13 @@ format:
 
 ## Executive Summary
 
-This project supports our partner, Heymate, in delivering data-driven menu insights to their restaurant clients. Leveraging over 3 million popularity records and the power of large language models, we developed a structured data cleaning pipeline and generated a weighted scoring mechanism to identify top-performing dishes. The final product includes a scalable recommendation system that suggests the most popular menu items based on restaurant type, enabling merchants to optimize their offerings with minimal technical effort.
+This project supports our partner, ["heymate!"](https://www.heymate.ca)(hereafter referred to as *Heymate*), in delivering data-driven menu insights to their restaurant clients. Using 3 million popularity records and large language models(LLMs), we developed a structured data cleaning pipeline and generated a weighted scoring mechanism to identify top-performing dishes. The final product includes a scalable recommendation system that suggests the most popular menu items based on restaurant type, enabling merchants to optimize their offerings with minimal technical effort.
 
 ## Introduction
 
 Our capstone partner, Heymate, offers an all-in-one business management platform, primarily serving restaurant clients. However, many of these restaurant owners struggle to design menus that align with customer preferences and evolving market trends due to limited access to broader market data. Our project aims to bridge that gap by transforming publicly available menu data into structured insights that support data-informed menu design, enabling the partner to deliver greater value to its clients through market-driven recommendations.
 
-Our initial resource was internal database provided by Heymate, containing thousands of raw menu records from their clients. However, the internal data alone was insufficient to support robust recommendation modeling due to limited scale of menu and lack of trending information. To address this, we explored various open-source datasets, and found a menu dataset containing millions of menu records along with associated popularity metrics on Uber Eats (@sakib2023ubereats), making it a strong data source in terms of scale, quality, and coverage.
+Our initial resource was internal database provided by Heymate, containing thousands of raw menu records from their clients. However, the internal data alone was insufficient to support robust recommendation modeling due to limited scale of menu and lack of trending information. Specifically, the internal dataset only includes around 300 restaurants, which limits its representativeness and diversity for building a generalizable recommendation system. To address this, we explored various open-source datasets, and found a menu dataset containing millions of menu records along with associated popularity metrics on Uber Eats (@sakib2023ubereats), making it a strong data source in terms of scale, quality, and coverage.
 
 However, messy data, large-scale datasets, and customized menu item names posed significant challenges to the construction of our recommendation system. Therefore, our scientific objective was to design an end-to-end pipeline that leverages diverse data science techniques to build a robust and scalable recommendation system, powered by a popularity-based knowledge base and capable of handling multi-type inputs.
 
@@ -37,15 +37,17 @@ Based on the project objective, we developed the following modular data pipeline
 
 ### Model Input Pipeline (Horizontal Workflow)
 
-1. Data Ingestion: After researching across multiple open-source datasets, we found a Uber Eats dataset from Kaggle covers a wide range of restaurant types, menu items, and their corresponding descriptions. 
-2. Feature Engineering: As the raw dataset was quite messy, it needed to undergo a series of preprocessing and standardization process so that we can use them for further popularity score calculation. 
-3. Knowledge Base Construction: Under suggestion and domain knowledge from the project partner,we buily a weighted scoring knowledge base on various popularity metrics. This serves as the foundation for capturing market trends and powering recommendations.
+1. Data Ingestion: As mentioned in the [Introduction](#introduction), we used an Uber Eats dataset from Kaggle that covers diverse restaurant types, menu items, and descriptions.
+2. Feature Engineering: As the raw dataset was quite messy, it needed to undergo a series of preprocessing and standardization processes so that we can use them for further popularity score calculation. 
+3. Knowledge Base Construction: Under suggestion and domain knowledge from the project partner,we built a weighted scoring knowledge base on various popularity metrics. This serves as the foundation for capturing market trends and powering recommendations.
 
 ### Testing and Production Pipeline (Vertical Workflow)
 
 1. Recommender Input: The recommender system can process JSON inputs from two sources, including client restaurant type from Heymate internal database, and user input of restaurant types via the web portal for real-time recommendations.
 2. Recommendation Module: Based on the specified restaurant type, the engine searches the knowledge base, ranks menu items using scoring logic, and generates a tailored Recommended Item List.
 3. Output Visualization: Final recommendations are displayed through a user-friendly dashboard, enabling clear interpretation and easy action on the results.
+
+\newpage
 
 ## Transition from Framework to Data Product
 
@@ -57,7 +59,7 @@ Having established our framework, we shifted our focus to building a scalable da
 
 To support the development of a robust recommendation engine, we first conducted exploratory data analysis (EDA) to assess data quality and structure. The insights suggest the need to perform wrangling tasks for a clean, consistent, and high-quality model input dataset.
 
-1. **Data Quality and Inconsistencies:** The raw Uber Eats data contains more than 5 million menu records, but it presented significant quality issues (shown in @tbl-null-entries), including missing critical metrics, formatting inconsistencies, posing a major challenge in popularity score calculation. Therefore, we implemented preprocessing logic to remove all these incomplete, duplicated, or other invalid menu records, which results in around 3.2 million records for next step.
+1. **Data Quality and Inconsistencies:** The raw Uber Eats data contains more than 5 million menu records, but had quality issues (shown in @tbl-null-entries), including missing metrics and inconsistent formatting. Therefore, we implemented preprocessing logic to remove all these incomplete, duplicated, or other invalid menu records, which results in around 3.2 million records for next step.
 
 ```{r echo=FALSE, message=FALSE}
 library(readr)
@@ -67,13 +69,13 @@ null_data <- read_csv("../data/null_entries_ubereats.csv")
 kable(null_data, caption = "Null Entries in Uber Eats dataset (Model Input Data) {#tbl-null-entries}")
 ```
 
-2. **Large-Scale Data Processing:** Even after preprocessing, the dataset still contained over **3 million** records, making full in-memory processing impractical due to runtime and memory constraints. To ensure scalability, we implemented batch processing by retrieving indexed chunks and deployed it via a Flask framework with multithreaded API calls for concurrent execution.
+2. **Large-Scale Data Processing:** Even after preprocessing, the dataset still contained over **3 million** records. Details of our deployment approach are discussed in the [Data Science Methods](#distributed-deployment) section.
 
-\newpage
-
-3. **Menu Naming Variability:** The biggest challenge was the inconsistent naming of similar dishes, for example, “seafood fried rice” appeared in various forms and languages (@fig-seafood-fried-rice-var). This hindered similarity comparisons and recommendation accuracy. To address this, we used OpenAI’s GPT API for semantic standardization, enhancing consistency and model performance.
+3. **Menu Naming Variability:** Inconsistent naming of similar dishes (e.g., various forms of “seafood fried rice”) made it difficult to compare and group items. We address this challenge in detail in the [Data Cleaning Module](#data-cleaning-module).
 
 ![Seafood Fried Rice Spelling Variation](../image/final-6-seafood_fried_rice_products.png){#fig-seafood-fried-rice-var width="80%" fig-align="center"}
+
+\newpage
 
 #### Solution Pipeline
 
@@ -81,9 +83,9 @@ All wrangling tasks were encapsulated in modular Python scripts and integrated i
 
 ![Solution Pipeline (Model Training)](../image/final_3_training_pipline.png){#fig-training-pipline width="80%" fig-align="center"}
 
-1. Data Cleaning: Due to inconsistencies in the raw menu data from Uber Eats, we implemented preprocessing procedures. Since dishes were named differently across restaurants, we developed a semantic standardization pipeline powered by the GPT API to normalize dish names and group similar items under unified labels.
-2. Cleaning Deployment: This standardization process was deployed using a Flask-based batch-processing mechanism to enable concurrent processing. The Heymate engineering team will explore Azure as a potential option for faster and automated deployment. Each batch of raw data was processed and uploaded to generate a cleaned dataset.
-3. Scoring and Knowledge Base: Once the data was standardized, we joined each menu item with key popularity metrics. This aggregated table will be stored and used to calculate popularity scores, which will be discussed in detail in a later section.
+1. **Data Cleaning**: To handle naming inconsistencies across restaurants, we used an LLM-powered semantic standardization pipeline to group similar items under unified labels (details in [Data Cleaning Module](#data-cleaning-module)).
+2. **Cleaning Deployment**: The cleaning pipeline runs in batches via a Flask-based batch-processing mechanism for parallel execution. Each batch of raw data was processed and uploaded to generate a cleaned dataset. 
+3. **Scoring and Knowledge Base**: Cleaned items are merged with key popularity metrics to build an aggregated table for popularity score computation (details in [Recommendation Algorithm](#recommendations-algorithm)).
 
 For the model testing dataset (@fig-testing-pipline), the similar logic is applied here as Heymate's internal database also exbihits some extent of quality issues (shown in @fig-null-internal). The standardized input will pass through the recommender system to generate top-rated dish recommendations.
 
@@ -103,19 +105,19 @@ Specifically, we want to address following issues:
 
 ![Cleaning Challenge Example](../image/final_9_cleaning_challenge.png){#fig-cleaning-challenge width="30%" fig-align="center"}
 
-Without resolving these issues, it would have been impossible to run any structured analysis across restaurants at scale. Since our project timeline are relatively tight, we decided to utilize GPT API as it can achieve semantic inference, format alignment, as well as language processing in a more efficient manner while maintaining relativeky great quality. Therefore, we developed a prompt-engineering pipeline that includes two main parts:
+Due to limited time, we decided to utilize ChatGPT API as it can achieve semantic inference, format alignment, as well as language processing more efficiently while maintaining quality. We developed prompts that includes two main parts:
 
 1. System prompt: Defines the input and output schema as well as cleaning rules, such as how to identify the core dish name, extract up to five descriptors, determine whether an item is a combo, and standardize the restaurant type.
 2. User prompt: Feeds batches of raw menu rows into the model in a list of dictionary format.
 
-The GPT model returns structured output for each menu item, including (@fig-cleaned-example):
+The ChatGPT model returns structured output for each menu item, including (@fig-cleaned-example):
 
 - `dish_base`: core identity (e.g. “fried rice”).
 - `dish_flavor`: tags like cooking method or toppings (e.g. [“chicken”]).
-- `is_combo`: boolean indicating if the item is a combo.
+- `is_combo`: boolean indicating whether the item is a combo.
 - `restaurant_type_std`: standardized restaurant type aligned with Google Maps Food and Drinks category. 
 
-![Cleaned Menu Iten Example](../image/final_10_cleaned_example.png){#fig-cleaned-example width="70%" fig-align="center"}
+![Cleaned Menu Item Example](../image/final_10_cleaned_example.png){#fig-cleaned-example width="70%" fig-align="center"}
 
 To ensure extraction quality and reliability, we iteratively refined our prompt engineering strategy:
 
@@ -134,40 +136,28 @@ With this module, we were able to clean inconsistent menu data into a structured
 ![Recommendations Workflow](../image/final_5_recommendation_flow.png){#fig-rec-flow width="80%" fig-align="center"}
 
 #### Feature Integration
-Once the LLM produces cleaned menu data (in table `cleaned_menu_mds`), we proceeded to feature integration, enriching this data with relevant popularity metrics.
-At this stage, we:
 
-- Joined the cleaned Uber Eats menu data (text data) with popularity metrics in the original Uber Eats metadata table `Restaurants_mds`, which contains rating counts and rating scores.
-- This step allowed us to bring back three key popularity indicators that were temporarily removed during cleaning:
-    - Number of Ratings: how many users rated the dish
-    - Average Rating: the restaurant average rating score given by users
-    - Item Frequency: how often a dish appears, counting occurrences grouped by dish base, dish flavor, and restaurant type
-- We also removed entries where `is_combo == True` to avoid noise in popularity estimates.
+Once the data cleaning module produces cleaned menu data (stored in `cleaned_menu_mds`), we enrich it by joining with the Uber Eats metadata table (`Restaurants_mds`) to reintroduce three key popularity indicators that had been excluded during the cleaning phase:
 
-The resulting dataset forms the **core knowledge base**, a structured, popularity-aware version of Uber Eats data, on which all recommendations are based.
+- Number of Ratings: how many users rated the dish
+- Average Rating: the restaurant average rating score given by users
+- Item Frequency: how often a dish appears, counting occurrences grouped by dish base, dish flavor, and restaurant type
 
-### Normalize Matrix
-For popularity score calculation, as the raw values of frequency or rating counts can be heavily skewed or on different scales. We applied **MinMaxScaler** to rescale them to the [0, 1] range to ensure that the three indicators (rating counts, rating scores, frequency) are comparable and balanced.
+To ensure that combination meals don’t distort the popularity signals, we filter out all entries flagged as combos (`is_combo == True`). The resulting dataset serves as the foundation for our **core knowledge base**.
 
-Normalized columns include:
-
-- `freq_scaled`: normalized frequency of the dish
-- `rating_scaled`: normalized count of user ratings
-- `score_scaled`: normalized average user rating
-
-This step creates a uniform basis for computing the final popularity score.
 
 ### Compute Popularity Score
 
-We calculate a weighted popularity score for each dish as follows:
+We applied **MinMaxScaler** to rescale frequency, rating count, and rating score to a [0, 1] range. We then calculate a weighted popularity score for each dish as follows:
 
 `popularity_score = (0.2 * freq_scaled + 0.6 * rating_scaled + 0.2 * score_scale)`
  
-These weights were selected based on exploratory testing and domain intuition from the partner, prioritizing the number of reviews as a strong signal of customer engagement,  an approach supported by industry practices/research  in similar recommendation systems (@chitalia2023yelp @alrubaye2020github)
+Weights were selected based on testing and partner input, prioritizing review count as a signal of engagement, an approach supported by industry practices/research in similar recommendation systems (@chitalia2023yelp @alrubaye2020github).
 
 - **60% rating count: (`rating_scaled`)** Measures how many people have reviewed; we viewed it  as the strongest proxy of broad customer engagement.
 - **20% average score: (`score_scaled`)** captures perceived quality but is often biased by low volume.
 - **20% frequency: (`freq_scaled`)** reflects widespread presence on menus but doesn’t always indicate desirability.  
+
 All computed scores are stored in a SQL table: `cleaned_menu_with_popularity`
 This becomes the knowledge base table used for filtering and recommendations.
 
@@ -177,33 +167,19 @@ At recommendation time, the system:
 
 1. Accepts input from a restaurant partner (up to 3 restaurant types)
 2. Filters the knowledge base (`cleaned_menu_with_popularity`) using:
-    - Exact matches on restaurant_type_std
+    - Exact matches on `restaurant_type_std`
     - Filters out duplicate dishes (e.g. same base/flavor combo for the same type)
 3. For multi-type requests, the popularity scores are averaged across the selected types
 4. Dishes are then ranked based on their average popularity score
 
 Finally, the top N dishes (configurable) are returned as output.
 
-#### Clarification on Filtering Scope
-
-Currently, our system supports **structured filtering only** specifically, by one to three restaurant_type_std values (e.g. "pizza restaurant"). These types are extracted during LLM cleaning and matched exactly during the filtering process. This was inspired by best practices in popularity-based recommenders, which focus on transparency and operational simplicity in early-stage deployment @keshetti2020popularity.
-At this stage, we do **not** support:
-
-- Keyword-based filtering (e.g. searching for "pepperoni")
-- Semantic/embedding-based matching (e.g. interpreting "comfort food" or "something spicy")
-- GPT-powered fuzzy search at recommendation time
-
-This was a deliberate choice to prioritize __transparency, control,__ and __execution speed__ in our MVP. Additionally, our dataset, though enriched and cleaned, lacked consistent free-text queries or labelled user intent, which made implementing semantic search or GPT-based query interpretation less feasible at this stage.
 
 ## Example Use Case: Recommending for a Pizza Restaurant
 
 To demonstrate how the recommendation engine works in practice, we include a use case where a partner restaurant is identified as a **“pizza restaurant”**. The system filters all dishes from our cleaned Uber Eats knowledge base that match this restaurant type and scores each based on its normalized rating score, frequency, and rating count. The weighted score is then used to rank the items, returning the top 10 most relevant dishes.
 
-As shown in the figure below @fig-rec-example, the top-ranked items for a pizza restaurant include popular classics such as:
-
-- Pizza (cheese) and Pizza (pepperoni) — widely rated and highly frequent across menus.
-- Pizza (meat lover) and Spaghetti (meatball) — dishes with consistent performance.
-- Less expected but still relevant items like Papadia (parmesan crust) also appear due to strong metric combinations.
+As shown in the figure below @fig-rec-example, the top items for a pizza restaurant include classics like pepperoni pizza, meat lover’s pizza, and spaghetti. Less expected items like Papadia also rank highly due to strong metric combinations.
 
 ![Recommendations For a Pizza Restaurant”](../image/final-7-rec-example.png){#fig-rec-example width="80%" fig-align="center"}
 
@@ -211,76 +187,70 @@ As shown in the figure below @fig-rec-example, the top-ranked items for a pizza 
 
 ![Visualization Demo”](../image/final-8-viz.png){#fig-viz-demo width="80%" fig-align="center"}
 
-To make our recommendation results interpretable and actionable, we built a two-part visualization:
+To make our recommendation results interpretable and actionable, we built a two-part visualization demo:
 
-#### CRM System Integration Mockup 
-On the left of @fig-viz-demo, we show a conceptual UI for how this recommendation module could be embedded in the Heymate CRM by the Heymate engineering team. This allows restaurant managers to easily access insights from their dashboard, specifically under the “Recommendation” tab, alongside other operational menus.
+- **CRM Integration Mockup (Left of @fig-viz-demo):** A conceptual UI showing how Heymate’s CRM can embed our recommender. This allows managers to access top dish insights directly from their dashboard. The Heymate engineering team plans to build this interface in future development.
+- **Altair Bar Chart (Right of @fig-viz-demo):** A visual of top dishes sorted by popularity score. Features include:
+    - Heymate brand colors for top 3 dishes
+    - Percentage labels and hover tooltips for easy exploration
+    - Combined dish base and flavor names for clarity
 
-#### Recommendation Output Visualization
-On the right of @fig-viz-demo is an Altair-based bar chart showcasing the top dishes sorted by computed popularity score. Key design features include:
-
-- Top 3 highlights using Heymate brand colours (yellow, red, rose).
-- Pop score bars are annotated directly with percentage labels.
-- Hover tooltips for dish name and score for ease of exploration.
-- Combined label (dish base + flavor) for intuitive comprehension.
-
-This visualization not only validates that our scoring pipeline works but also provides a clear and professional way for stakeholders to compare and act on dish performance. It is also exportable as a standalone HTML component and ready for dashboard integration.
+This design ensures our scoring pipeline results are both explainable and ready for integration.
 
 ## How to Use the Data Product
 
-We designed this data product to support Heymate’s internal team and clients in making data-informed menu decisions. 
+We designed this product to help Heymate and its clients make informed menu decisions.
 
-### Intended Usage
-Heymate can utilize this tool in two primary ways:
+### Internal Use
 
-- Internal Use Mode: 
-    - Data Update & Validation: When a new data source becomes available, the internal team can upload and process it through the system to evaluate performance with updated inputs.
-    - Testing & Iteration: By inputting internal client restaurant types, internal users can assess the quality of dish name cleaning and observe how the system generates standardized output. This enables iterative refinement and ensures reliability before onboarding new clients.
-- Client-Facing Deployment: On the frontend, a client can simply select their restaurant type (e.g. “pizza restaurant”), and the system returns a list of top recommended dishes based on aggregated popularity metrics from similar restaurants. This empowers merchants to make data-driven menu decisions aligned with current market trends.
+This internal setup enables iterative refinement of the pipeline: 
 
-Overall speaking, to enable a scalable, end-to-end pipeline that supports both internal testing and client-facing deployment, we applied several key data science techniques. Below, we highlight three methods that were critical to addressing real-world data challenges.
+- Data Updates: Heymate staff can upload new datasets to evaluate updates and improvements.
+- Testing & QA: Input client restaurant types to verify dish name cleaning and recommendation logic.
+
+### Client Deployment
+
+To support merchants in aligning with current market trends, this tool enables data-driven menu decision-making:
+
+- Restaurant Type Input: Clients select a restaurant type (e.g., “pizza restaurant”).
+- Recommended Output: The system returns a list of top recommended dishes based on aggregated popularity metrics from similar restaurants.
 
 ## Data Science Methods
 
-We applied many data science techniques in our capstone project and are highlighting 3 here:
-
-- LLM Integration
-- Distributed Deployment
-- Materialized View
+To build a scalable pipeline supporting both internal testing and client deployment, we applied three key data science techniques: **LLM Integration**, **Distributed Deployment**, and **Materialized View**. In the following sections, we describe how each method was applied, along with its limitations and alternative approaches considered. 
 
 ### LLM Integration
-We leveraged large language models (LLMs) to clean and standardize the menu data. The raw data was not available for direct use in our recommendation system due to inconsistencies in formatting, spelling variations, and the presence of multiple languages. By integrating LLMs, we were able to extract key information of dish bases and dish flavors, from item names, categories, and descriptions with high accuracy. Even in the case when the description is missing, the LLMs can still infer the information from the item name and category, as well as the context of the restaurant name.
+
+We used large language models (LLMs) to clean and standardize messy menu data. As discussed in the [Data Cleaning Module](#data-cleaning-module), the raw data was not available for direct use in our recommendation system. The LLM efficiently extracted core dish information (including base, flavor, combo status, and restaurant type) even when descriptions were missing, enabling effective and streamlined data cleaning.
 
 #### Limitation
 
-This approach requires payment for API usage. After evaluating trade-offs between computational power and cost, we chose to use the **ChatGPT-4o mini** model.
+This approach requires payment for API usage. After evaluating trade-offs between computational power and cost, we chose to use the **ChatGPT-4o mini** model. 
 
 #### Alternative Methods Considered
 
 - Regular Expressions: Effective for extracting structured patterns, but not feasible here due to inconsistent formatting and multilingual input.
 - Custom Deep Learning Model: While potentially powerful, this would require labelled training data and significant time and computational resources. We don’t have such resources within our project scope.
-- Locally Deployed LLM: This could reduce long-term costs, but setup and maintenance would bring practical challenges within our capstone timeline.
 
 ### Distributed Deployment
-Our project involved processing a large dataset, over 3 million rows from the Uber Eats dataset. Cleaning this data sequentially would have taken approximately 5,000 hours, which was not feasible within our timeline. To solve this, we implemented a distributed deployment infrastructure to significantly speed up processing.
-We designed and deployed an HTTP-triggered function to process data in batches. Each instance is triggered via a web request, with the batch range passed as parameters. The system logs the task status at both the start and end of execution. To monitor tasks internally, we also built a dashboard in Looker Studio.
-Initially, we planned to deploy using Azure Functions on our partner’s cloud infrastructure. However, due to security configuration challenges, we were unable to proceed with this plan. As a fallback, we deployed the system locally using the Flask framework and ran up to 20 worker instances concurrently, achieving a 20x speedup.
+
+As mentioned in the [Exploratory Data Analysis](#exploratory-data-analysis) section, the raw Uber Eats dataset originally contained over 5 million rows. Cleaning this amount of data sequentially would have taken more than 5,000 hours. To speed up the process, we used distributed deployment to process multiple batches at the same time. We deployed 20 workers in parallel, achieving a 20× speedup.
+
+We initially planned to use Azure Functions as suggested in the Developer Guide[@azurefunctions], to align with our partner’s infrastructure. However, due to security configuration issues, we couldn’t proceed. As a fallback, we deployed the system locally using Flask.
 
 #### Limitation
 The number of concurrent worker instances is limited by the ChatGPT API rate limit.
 
-#### Alternative Approaches Considered
-We evaluated other cloud deployment solutions, such as EC2 from Amazon Web Services and Google Cloud Functions from the Google Cloud Platform. However, our partner uses Microsoft Azure, and we prioritized consistency within that ecosystem. In the future, our partner’s engineering team plans to migrate our local deployment to Azure Functions, once security configurations are in place.
+#### Alternative Methods Considered
+We explored other cloud deployment options, including Amazon EC2 and Google Cloud Functions. However, since our partner uses Microsoft Azure, we decided to stay within that ecosystem. In the future, their engineering team plans to migrate our local deployment to Azure Functions once the necessary security configurations are in place.
 
 ### Materialized View
-A Materialized View (also known as a Persistent Derived Table) is a database optimization technique that stores the result of a query as a physical table. This allows for much faster data retrieval by avoiding repeated computation over large datasets.
-Initially, it took around 6 minutes to generate a restaurant recommendation due to the volume of data. Such delays are unacceptable in production, especially since the recommendation module will eventually be integrated into the partner’s CRM system.
-To optimize query performance, we implemented a materialized view to cache pre-computed results. This optimization reduced runtime from 6 minutes to just 3 seconds.
+To speed up recommendations, we implemented a Materialized View, a database optimization technique that stores query results as a physical table, reducing query time from 6 minutes to 3 seconds and making the system suitable for integration into Heymate’s CRM.
 
 #### Limitations
 
-- Additional Storage Cost: The materialized view aggregates data from the original 3-million-row table, incurring some storage cost. However, this is minimal relative to the base data and is not a major concern.
-- Maintenance and Updates: When new data is ingested into the model input pipeline, the materialized view must be refreshed. To handle this, we established an automated workflow that updates the materialized view upon the successful completion of each data ingestion task.
+- Storage Cost: Adds minor overhead due to caching, but manageable.
+- Maintenance: Requires refresh after each data update. We automated refreshment after each successful data ingestion.
 
 ## Justification Over Other Products/Interfaces
 
@@ -288,9 +258,9 @@ There are existing solutions that rely entirely on LLMs to build AI agents for r
 
 However, this approach has several clear limitations:
 
-1.	LLMs are transformer-based models and are not well-suited for handling structured logic or computations involving large-scale tabular data.
-2.	Interpretability is low: these systems often function as black boxes, making it difficult to understand or explain how the recommendations are generated.
-3.	Lack of real market data: These models typically do not incorporate up-to-date or domain-specific datasets. In contrast, our system is built on a dataset of over 3 million real menu records, providing a much more grounded and data-driven foundation for recommendations.
+- LLMs are transformer-based models and are not well-suited for handling structured logic or computations involving large-scale tabular data.
+- Interpretability is low: these systems often function as black boxes, making it difficult to understand or explain how the recommendations are generated.
+- Lack of real market data: These models typically do not incorporate up-to-date or domain-specific datasets. In contrast, our system is built on a dataset of over 3 million real menu records, providing a much more grounded and data-driven foundation for recommendations.
 
 ## Conclusions and Recommendations
 
@@ -312,25 +282,25 @@ This product functions well as a minimum viable recommendation engine, particula
 
 While our data product offers a practical solution for transforming raw menu data into structured insights, several limitations remain:
 
-- **Popularity Bias:** Our current popularity scoring system relies on static metrics due to the lack of real transaction data. This makes it a proxy measure and may not fully reflect true customer preferences. The score could be further improved by incorporating additional quantitative features like price, review volume, or order frequency if available in the future.
-- **Static Reference:** Our analysis is currently based on static snapshots of menu data. Without timestamped records, we are unable to capture how item popularity or menu composition evolves. This limits our ability to detect trends such as seasonal specials or emerging bestsellers.
-- **Hard Filtering:** Restaurant type filtering is an exact match only (e.g. “pizza restaurant”), limiting support for broader or fuzzy queries like “comfort food” or “date night meals”. A more flexible filtering mechanism could improve the versatility of the tool.
-- **Evaluation Challenge:** Due to limited deployment and lack of real-time feedback from users, our validation process is based on illustrative case studies (e.g. the pizza restaurant example). While useful for demonstration, A/B testing or real user feedback would be necessary to confirm the real-world effectiveness of the tool.
-- **Scalability Constraint:** Although our local pipeline performs well, we haven’t deployed it to Azure yet due to resource and security constraints. As a result, the system is not yet scalable enough for real-time or production use cases.
-- **Lack of Granular Personalization:** While our system standardizes restaurant types (e.g. “Chinese restaurant”), it does not yet support finer-grained classification at the sub-type level (e.g. “Szechuan,” “Cantonese”). Additionally, the recommender ignores important factors such as local popularity, pricing, and user-specific preferences. These limitations reduce the system’s ability to deliver tailored insights for diverse audiences.
+- **Popularity Bias:** The popularity score is based on static metrics (e.g., rating count, average score, frequency) rather than real transaction data, serving only as a proxy for customer preference. Future versions could incorporate features like price or order frequency to improve accuracy.
+- **Lack of Temporal Insights:** The dataset lacks timestamped records, limiting our ability to detect seasonal trends or menu evolution over time.
+- **Rigid Matching Logic:** Recommendations rely on exact restaurant type matches, limiting support for fuzzy or semantic queries like “comfort food.” This reduces flexibility for broader user intents.
+- **Limited Evaluation:** Current validation is based on case studies due to a lack of real user feedback. A/B testing or real user feedback would be necessary to confirm the effectiveness.
+- **Scalability Issues:** Azure deployment is pending due to resource and security limitations. The pipeline is not yet scalable enough for production use cases. 
+- **Low Personalization:** The pipeline doesn’t support sub-types (e.g., “Szechuan”) or consider local trends, pricing, or user preferences, limiting personalization. 
  
 ### Recommendations for Heymate
 
 To evolve this prototype into a production-ready recommender, we recommend:
 
-1. Temporal Tracking: Incorporate timestamped data to uncover seasonal patterns and trends.
-2. Restaurant Feedback Loop: Integrate feedback from partner restaurants to refine recommendations over time.
-3. Semantic Filtering: Support flexible, natural-language queries using embeddings or GPT-powered matching.
-4. Cloud Deployment: Deploy to Azure to support scalability and integrate directly with Heymate’s CRM system.
-5. Subtype Extraction: Enhance LLM outputs with more detailed tags (e.g. “spicy,” “gluten-free,” “vegan”) for deeper filtering.
-6. Evaluation Framework: Design structured evaluations using click data, client interviews, or business KPIs to measure impact.
+- **Temporal Tracking**: Incorporate timestamped data to uncover seasonal patterns and trends.
+- **Restaurant Feedback Loop**: Integrate feedback from partner restaurants to refine recommendations over time.
+- **Semantic Filtering**: Support flexible, natural-language queries using embeddings or LLM-powered matching.
+- **Cloud Deployment**: Deploy to Azure to support scalability and integrate directly with Heymate’s CRM system.
+- **Subtype Extraction**: Enhance LLM outputs with more detailed tags (e.g. “spicy,” “gluten-free,” “vegan”) for deeper filtering.
+- **Evaluation Framework**: Design structured evaluations using click data, client interviews, or business KPIs to measure impact.
  
-Our product lays a solid foundation for **scalable, transparent**, and **explainable menu recommendations**. With further iteration, it can evolve into a dynamic and adaptive system that supports Heymate’s long-term vision for partner success.
+Our product lays a foundation for scalable, transparent recommendations. With further iteration, it can evolve into a dynamic and adaptive system that supports Heymate’s long-term vision for partner success.
 
 {{< pagebreak >}}
 
