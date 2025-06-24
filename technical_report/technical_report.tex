@@ -133,6 +133,39 @@
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \KOMAoption{captions}{tableheading,figureheading}
 \makeatletter
@@ -260,8 +293,7 @@ agreed upon the techinical deliverables:
   A visualization demo for reference.
 \end{itemize}
 
-\section{Project Preparation -
-Dataset}\label{project-preparation---dataset}
+\section{Preparing the Dataset}\label{preparing-the-dataset}
 
 To build the recommendation model, we needed training data. We compared
 several datasets shared by the partner, our advisor, and our own
@@ -272,25 +304,27 @@ research:
 \item
   \textbf{Dothub Dataset Shared by the Partner:} This dataset is 66.4 GB
   and consists of 6,479,347 rows, including restaurant names and
-  addresses in the US. We didn't choose this dataset because it did not
-  include restaurant menu data.
+  addresses in the US DoltHub (2022). We didn't choose this dataset
+  because it did not include restaurant menu data.
 \item
   \textbf{Yelp Dataset Shared by the Partner:} This dataset includes
-  6,990,280 reviews from 150,346 restaurants. While restaurant reviews
-  could potentially be a good feature for building the model, it lacked
-  menu data. This limitation made it unsuitable for direct use.
+  6,990,280 reviews from 150,346 restaurants Yelp (2025). While
+  restaurant reviews could potentially be a good feature for building
+  the model, it lacked menu data. This limitation made it unsuitable for
+  direct use.
 \item
   \textbf{What's On The Menu? Dataset by New York Public Library:} This
   dataset includes about 45,000 menus from the 1840s to 2016, containing
-  restaurant information and menu data. However, the dataset is old and
-  doesn't necessarily reflect the most up-to-date trends, so we didn't
-  choose it.
+  restaurant information and menu data New York Public Library (2019).
+  However, the dataset is old and doesn't necessarily reflect the most
+  up-to-date trends, so we didn't choose it.
 \item
   \textbf{Uber Eats Dataset (``the Uber Eats Data''):} This dataset
   includes over 63,000 restaurants and more than 5 million menus from
-  Uber Eats in the US, collected in 2023. It contains restaurant names,
-  review information, and individual menu items. Due to its recency and
-  completeness, we agreed on this dataset with the partner.
+  Uber Eats in the US, collected in 2023 Sakib (2023). It contains
+  restaurant names, review information, and individual menu items. Due
+  to its recency and completeness, we agreed on this dataset with the
+  partner.
 \end{itemize}
 
 \section{Dataset EDA and Feature
@@ -345,9 +379,9 @@ We considered the following approaches:
 Here is a table comparing the different approaches:
 
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4286}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2857}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2857}}@{}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2569}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4861}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2569}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Approach
@@ -361,11 +395,12 @@ Cons
 \bottomrule\noalign{}
 \endlastfoot
 Regular Expressions & Fast to compute; Free & Limited flexibility \\
+& & \\
 Existing Word Embedding Model (HuggingFace) & Semantic understanding;
 Efficiency; Free & Multi-lingual challenge \\
+& & \\
 Generalized Large Language Model (LLM) & Highly flexible; Supporting
-Multi-Multi-lingual; Semantic understanding & Costly; Slow; API
-Reliance \\
+Multi-lingual; Semantic understanding & Costly; Slow; API Reliance \\
 \end{longtable}
 
 \section{Research on the Recommendation
@@ -381,9 +416,9 @@ We researched three common recommendation methods used in the industry:
   \textbf{Collaborative Filtering / Matrix Factorization:} This method
   is widely used in industry, including by companies like Netflix, to
   generate recommendations based on user-item interaction data (e.g.,
-  purchase history or user ratings). However, in the Uber Eats dataset,
-  we do not have access to such user interaction data, making this
-  method infeasible for our use case.
+  purchase history or user ratings) Gomez-Uribe and Hunt (2016).
+  However, in the Uber Eats dataset, we do not have access to such user
+  interaction data, making this method infeasible for our use case.
 \item
   \textbf{Content-Based Filtering with Vector Embeddings:} This involves
   using a pre-trained large language model to convert menu items from
@@ -396,62 +431,64 @@ We researched three common recommendation methods used in the industry:
   language model locally or fine-tune one.
 \item
   \textbf{Popularity-Based Recommendation:} Popularity is a widely
-  accepted baseline metric in the industry, used by platforms like Yelp,
-  Spotify, and GitHub. For instance, GitHub calculates a popularity
-  score based on the number of forks a repository receives. For
-  Heymate!, we designed a custom formula that incorporates the
-  \textbf{number of reviews}, \textbf{average rating of a restaurant},
-  and the \textbf{frequency of a cuisine} to calculate a popularity
-  score. These data points are available in the Uber Eats dataset.
-  Additionally, this method is easy to understand and communicate to
-  restaurant owners. Given its advantages in both interpretability and
-  feasibility, we chose to adopt a \textbf{Popularity-Based
-  Recommendation} approach in our project.
+  accepted baseline metric in the industry, used by platforms like Yelp
+  Chitalia (2023), and GitHub Sreekala (2020). For instance, GitHub
+  calculates a popularity score based on the number of forks a
+  repository receives Al-Rubaye and Sukthankar (2020). For Heymate!, we
+  designed a custom formula that incorporates the \textbf{number of
+  reviews}, \textbf{average rating of a restaurant}, and the
+  \textbf{frequency of a cuisine} to calculate a popularity score. These
+  data points are available in the Uber Eats dataset. Additionally, this
+  method is easy to understand and communicate to restaurant owners.
+  Given its advantages in both interpretability and feasibility, we
+  chose to adopt a \textbf{Popularity-Based Recommendation} approach in
+  our project.
 \end{itemize}
 
 \section{Techinical Implemetation}\label{techinical-implemetation}
 
-During development, the team utilized \textbf{GitHub} and \textbf{Slack}
-for communication and collaboration. We modularized each component for
-future improvement.
+During development, the team utilized GitHub and Slack for communication
+and collaboration. We modularized each component for future improvement.
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{visualization\_demo.ipynb}: Demonstrates data visualizations,
-  likely with charts or graphs.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/visualization_demo.ipynb}{\texttt{visualization\_demo.ipynb}}:
+  A notebook that visualizes the recommendation output.
 \item
-  \texttt{knowledge\_base\_update.ipynb}: A notebook manages the task of
-  updating the knowledge base of menu data.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/knowledge_base_update.ipynb}{\texttt{knowledge\_base\_update.ipynb}}:
+  A notebook manages the task of updating the knowledge base of menu
+  data.
 \item
-  \texttt{archived\_function\_app.py}: Stores deprecated or old Azure
-  Function logic.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/archived_function_app.py}{\texttt{archived\_function\_app.py}}:
+  Stores deprecated Azure Function logic.
 \item
-  \texttt{batch\_cleaning.py}: Cleans raw menu data in batches.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/batch_cleaning.py}{\texttt{batch\_cleaning.py}}:
+  Cleans raw menu data in batches.
 \item
-  \texttt{credential\_validation\_test\_unit.py}: Unit tests for
-  verifying database and API credentials.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/credential_validation_test_unit.py}{\texttt{credential\_validation\_test\_unit.py}}:
+  Unit tests for verifying database and API credentials.
 \item
-  \texttt{flask\_deploy.py}: Deploy the data cleaning module locally
-  under the Flask framework.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/flask_deploy.py}{\texttt{flask\_deploy.py}}:
+  Deploy the data cleaning module locally under the Flask framework.
 \item
-  \texttt{menu\_recommender.py}: Recommends menu items and return the
-  output as a JSON object.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/menu_recommender.py}{\texttt{menu\_recommender.py}}:
+  Recommends menu items and return the output as a JSON object.
 \item
-  \texttt{popularity\_score\_calculator.py}: Calculates popularity
-  scores for items.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/popularity_score_calculator.py}{\texttt{popularity\_score\_calculator.py}}:
+  Calculates popularity scores for items.
 \item
-  \texttt{util\_database\_reader.py}: Utility to read data from a
-  database.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/util_database_reader.py}{\texttt{util\_database\_reader.py}}:
+  Utility to read data from a database.
 \item
-  \texttt{util\_database\_uploader.py}: Utility to upload or write data
-  to a database.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/util_database_uploader.py}{\texttt{util\_database\_uploader.py}}:
+  Utility to upload or write data to a database.
 \item
-  \texttt{util\_llm\_data\_cleaner.py}: Utility to send and retrieve the
-  data to ChatGPT's API.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/util_llm_data_cleaner.py}{\texttt{util\_llm\_data\_cleaner.py}}:
+  Utility to send and retrieve the data to ChatGPT's API.
 \item
-  \texttt{util\_task\_logger.py}: Logs tasks or events during execution
-  for tracking/debugging.
+  \href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/util_task_logger.py}{\texttt{util\_task\_logger.py}}:
+  Logs tasks or events during execution for tracking/debugging.
 \end{itemize}
 
 \section{Deployment of the Data Cleaning
@@ -527,14 +564,36 @@ team's effort, we successfully cleaned:
   More than 30,000 entries in the Uber Eats dataset.
 \end{itemize}
 
-\section{Suggestions for Future
-Development}\label{suggestions-for-future-development}
+This allowed us to proceed further with the implementation of the
+recommendation alogorithm without blocking the project timeline.
 
-We provided detailed user instructions on how to set up the environment
-and execute the code in the
-\textbf{\href{https://github.com/UBC-MDS/heymate-report}{README file of
-the repository}}. There are a few areas where this project could be
-extended:
+\section{Onboarding Instruction and Suggestions for Future
+Development}\label{onboarding-instruction-and-suggestions-for-future-development}
+
+The developer should first install and activate the Conda environment
+using the \texttt{environment.yml} file, and then set up the
+\texttt{credentials} folder. More detailed instructions can be found
+\href{https://github.com/UBC-MDS/heymate-report}{here}. Please note that
+the ChatGPT API token is \textbf{not required} unless the developer
+plans to load additional data into the knowledge base.
+
+\href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/visualization_demo.ipynb}{\texttt{visualization\_demo.ipynb}}
+includes detailed instructions on how to trigger recommendations and
+visualize the output. The developer can customize the visualization by
+adjusting the Altair code and exporting the result as an HTML object. If
+they would like to update the formula used for calculating the
+popularity score, changes can be made in the
+\href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/popularity_score_calculator.py}{\texttt{popularity\_score\_calculator.py}}
+script.
+
+Currently, there are 30,000 data entries in the knowledge base, which
+already provide decent results. If the developer wishes to load more
+data, they can refer to the instructions in
+\href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/knowledge_base_update.ipynb}{\texttt{knowledge\_base\_update.ipynb}}.
+To use a different LLM model, they can make the necessary changes in
+\href{https://github.com/UBC-MDS/heymate-report/blob/readme-update/script/util_llm_data_cleaner.py}{\texttt{util\_llm\_data\_cleaner.py}}.
+
+There are a few areas where this project could be extended:
 
 \begin{itemize}
 \tightlist
@@ -575,6 +634,51 @@ extended:
   LLM such as Ollama. This can significantly reduce the usage cost of
   ChatGPT.
 \end{itemize}
+
+\newpage{}
+
+\section*{References}\label{references}
+\addcontentsline{toc}{section}{References}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-alrubaye2020github}
+Al-Rubaye, S., and G. Sukthankar. 2020. {``Popularity-Based Ranking of
+GitHub Repositories.''} \emph{IEEE}.
+\url{https://ieeexplore.ieee.org/document/9458206}.
+
+\bibitem[\citeproctext]{ref-chitalia2023yelp}
+Chitalia, A. 2023. {``Yelp Popularity Score Calculator.''}
+\url{https://scholarworks.sjsu.edu/etd_projects/1261}.
+
+\bibitem[\citeproctext]{ref-dolthub_menus}
+DoltHub. 2022. {``Menus Dataset.''}
+\url{https://www.dolthub.com/repositories/dolthub/menus/data/master}.
+
+\bibitem[\citeproctext]{ref-gomezuribe2016netflix}
+Gomez-Uribe, Carlos A., and Neil Hunt. 2016. {``The Netflix Recommender
+System: Algorithms, Business Value, and Innovation.''} \emph{ACM
+Transactions on Management Information Systems (TMIS)} 6 (4): 13:1--19.
+\url{https://doi.org/10.1145/2843948}.
+
+\bibitem[\citeproctext]{ref-nypl_menu}
+New York Public Library. 2019. {``What's on the Menu? Dataset.''}
+\url{https://www.kaggle.com/datasets/nypl/whats-on-the-menu/data}.
+
+\bibitem[\citeproctext]{ref-ubereats_dataset}
+Sakib, Ahmed Shahriar. 2023. {``Uber Eats USA Restaurants and Menus
+Dataset.''}
+\url{https://www.kaggle.com/datasets/ahmedshahriarsakib/uber-eats-usa-restaurants-menus/data}.
+
+\bibitem[\citeproctext]{ref-sreekala2020popularity}
+Sreekala, Keshetti. 2020. {``Popularity-Based Recommendation System.''}
+\emph{ResearchGate}.
+
+\bibitem[\citeproctext]{ref-yelp_open_dataset}
+Yelp. 2025. {``Yelp Open Dataset.''}
+\url{https://business.yelp.com/data/resources/open-dataset/}.
+
+\end{CSLReferences}
 
 
 
