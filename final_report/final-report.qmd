@@ -187,9 +187,9 @@ As shown in the figure below @fig-rec-example, the top items for a pizza restaur
 
 ![Visualization Demo”](../image/final-8-viz.png){#fig-viz-demo width="80%" fig-align="center"}
 
-To make our recommendation results interpretable and actionable, we built a two-part visualization:
+To make our recommendation results interpretable and actionable, we built a two-part visualization demo:
 
-- **CRM Integration Mockup (Left of @fig-viz-demo):** A conceptual UI showing how Heymate’s CRM can embed our recommender. This allows managers to access top dish insights directly from their dashboard.
+- **CRM Integration Mockup (Left of @fig-viz-demo):** A conceptual UI showing how Heymate’s CRM can embed our recommender. This allows managers to access top dish insights directly from their dashboard.The Heymate engineering team plans to build this interface in future development.
 - **Altair Bar Chart (Right of @fig-viz-demo):** A visual of top dishes sorted by popularity score. Features include:
     - Heymate brand colors for top 3 dishes
     - Percentage labels and hover tooltips for easy exploration
