@@ -27,7 +27,9 @@ cd heymate-report
 
 ### 2. Set up Credentials
 You need to create the `credentials` folder and add the `.env` and `open_ai_token.txt` files.
-You can refer to the templates in the `credentials_template` folder. Edit the files with the appropriate API keys and tokens. **Folder name should be `credentials` and not `credentials_template` and files should be named `.env` and `open_ai_token.txt` respectively.**
+You can refer to the templates in the `credentials_template` folder. Edit the files with the appropriate API keys and tokens.
+
+ **Folder name should be `credentials` and not `credentials_template` and files should be named `.env` and `open_ai_token.txt` respectively.**
 
  **Note on Credentials**  
 Due to NDA agreements with Heymate, we are unable to share the actual API keys or `.env` contents publicly.  
@@ -67,12 +69,17 @@ python menu_recommender.py
 ```
 
 ### Visualize recommendation demo
+To view the recommendation output as an interactive bar chart for a given restaurant type:
+1. Open the visualization_demo.ipynb notebook in your local environment (e.g., VS Code or JupyterLab).
+2. Modify the values of type1, type2, and type3 to select up to three restaurant types.
+3. Run all cells in the notebook to generate the popularity-based recommendations.
+4. The output will be displayed as an interactive bar chart, showing the top recommended menu items for the selected restaurant types.
 
-To generate and visualize recommendations for a given restaurant type, refer to the [visualization_demo notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization_demo.ipynb).
+   Make sure you're in the correct conda environment: heymate-mds-data-clean-pipeline before running the notebook.
+   
+For more details, refer to the [visualization_demo notebook](https://github.com/UBC-MDS/heymate-report/blob/main/script/visualization_demo.ipynb) 
 
-You can choose up to three types: `type1`, `type2`, and `type3`.
 
-This will output the top N recommended dishes based on popularity scores for the selected restaurant types and visualize the results in a bar chart.
 
 ## 📝 Reports and Reproducibility
 
@@ -85,6 +92,10 @@ This will output the top N recommended dishes based on popularity scores for the
 ### How to Reproduce the Final Report
 
 To generate the **final report** in PDF format using Quarto, follow these steps:
+Remember to cd out of the `script` directory if you are still in it.
+```bash
+cd ..
+```   
 
 #### 1. Navigate to the Report Directory
 ```bash
