@@ -241,6 +241,7 @@ We initially planned to use Azure Functions as suggested in the Developer Guide[
 #### Limitation
 The number of concurrent worker instances is limited by the ChatGPT API rate limit.
 
+#### Alternative Methods Considered
 We explored other cloud deployment options, including Amazon EC2 and Google Cloud Functions. However, since our partner uses Microsoft Azure, we decided to stay within that ecosystem. In the future, their engineering team plans to migrate our local deployment to Azure Functions once the necessary security configurations are in place.
 
 ### Materialized View
