@@ -281,16 +281,16 @@ Workflow)}\label{model-input-pipeline-horizontal-workflow}
 \tightlist
 \item
   Data Ingestion: As mentioned in the
-  \hyperref[introduction]{Introduction}, we used a Uber Eats dataset
+  \hyperref[introduction]{Introduction}, we used an Uber Eats dataset
   from Kaggle that covers diverse restaurant types, menu items, and
   descriptions.
 \item
   Feature Engineering: As the raw dataset was quite messy, it needed to
-  undergo a series of preprocessing and standardization process so that
-  we can use them for further popularity score calculation.
+  undergo a series of preprocessing and standardization processes so
+  that we can use them for further popularity score calculation.
 \item
   Knowledge Base Construction: Under suggestion and domain knowledge
-  from the project partner,we buily a weighted scoring knowledge base on
+  from the project partner,we built a weighted scoring knowledge base on
   various popularity metrics. This serves as the foundation for
   capturing market trends and powering recommendations.
 \end{enumerate}
@@ -426,7 +426,7 @@ integrated into a unified data pipeline
 \tightlist
 \item
   \textbf{Data Cleaning}: To handle naming inconsistencies across
-  restaurants, we used a GPT-powered semantic standardization pipeline
+  restaurants, we used an LLM-powered semantic standardization pipeline
   to group similar items under unified labels (details in
   \hyperref[data-cleaning-module]{Data Cleaning Module}).
 \item
@@ -510,7 +510,7 @@ issues:
 
 \end{figure}%
 
-Due to limited time, we decided to utilize GPT API as it can achieve
+Due to limited time, we decided to utilize ChatGPT API as it can achieve
 semantic inference, format alignment, as well as language processing
 more efficiently while maintaining quality. We developed prompts that
 includes two main parts:
@@ -528,8 +528,8 @@ includes two main parts:
   of dictionary format.
 \end{enumerate}
 
-The GPT model returns structured output for each menu item, including
-(Figure~\ref{fig-cleaned-example}):
+The ChatGPT model returns structured output for each menu item,
+including (Figure~\ref{fig-cleaned-example}):
 
 \begin{itemize}
 \tightlist
@@ -539,7 +539,7 @@ The GPT model returns structured output for each menu item, including
   \texttt{dish\_flavor}: tags like cooking method or toppings
   (e.g.~{[}``chicken''{]}).
 \item
-  \texttt{is\_combo}: boolean indicating if the item is a combo.
+  \texttt{is\_combo}: boolean indicating whether the item is a combo.
 \item
   \texttt{restaurant\_type\_std}: standardized restaurant type aligned
   with Google Maps Food and Drinks category.
@@ -547,7 +547,7 @@ The GPT model returns structured output for each menu item, including
 
 \begin{figure}
 
-\caption{\label{fig-cleaned-example}Cleaned Menu Iten Example}
+\caption{\label{fig-cleaned-example}Cleaned Menu Item Example}
 
 \centering{
 
@@ -743,7 +743,7 @@ built a two-part visualization demo:
   \textbf{CRM Integration Mockup (Left of Figure~\ref{fig-viz-demo}):} A
   conceptual UI showing how Heymate's CRM can embed our recommender.
   This allows managers to access top dish insights directly from their
-  dashboard.The Heymate engineering team plans to build this interface
+  dashboard. The Heymate engineering team plans to build this interface
   in future development.
 \item
   \textbf{Altair Bar Chart (Right of Figure~\ref{fig-viz-demo}):} A
@@ -841,33 +841,27 @@ Considered}\label{alternative-methods-considered}
 
 As mentioned in the \hyperref[exploratory-data-analysis]{Exploratory
 Data Analysis} section, the raw Uber Eats dataset originally contained
-over 5 million rows.To handle this volume efficiently within our project
-timeline, we implemented a distributed deployment infrastructure.
-Cleaning this dataset sequentially would have taken over 5,000 hours, so
-we built an HTTP-triggered batch-processing system using Flask. Each
-instance processed a defined batch, allowing up to 20 workers to run
-concurrently and achieving a 20x speedup.
+over 5 million rows. Cleaning this amount of data sequentially would
+have taken more than 5,000 hours. To speed up the process, we used
+distributed deployment to process multiple batches at the same time. We
+deployed 20 workers in parallel, achieving a 20× speedup.
 
-Originally, we planned to use Azure Functions following Developer
-Guide(Microsoft 2024), aligning with our partner's infrastructure, but
-security configuration issues prevented deployment. As a fallback, we
-deployed locally. A Looker Studio dashboard was also developed to
-monitor processing status and performance.
+We initially planned to use Azure Functions as suggested in the
+Developer Guide(Microsoft 2024), to align with our partner's
+infrastructure. However, due to security configuration issues, we
+couldn't proceed. As a fallback, we deployed the system locally using
+Flask.
 
 \subsubsection{Limitation}\label{limitation-1}
 
 The number of concurrent worker instances is limited by the ChatGPT API
 rate limit.
 
-\subsubsection{Alternative Approaches
-Considered}\label{alternative-approaches-considered}
-
-We evaluated other cloud deployment solutions, such as EC2 from Amazon
-Web Services and Google Cloud Functions from the Google Cloud Platform.
-However, our partner uses Microsoft Azure, and we prioritized
-consistency within that ecosystem. In the future, our partner's
+We explored other cloud deployment options, including Amazon EC2 and
+Google Cloud Functions. However, since our partner uses Microsoft Azure,
+we decided to stay within that ecosystem. In the future, their
 engineering team plans to migrate our local deployment to Azure
-Functions, once security configurations are in place.
+Functions once the necessary security configurations are in place.
 
 \subsection{Materialized View}\label{materialized-view}
 
@@ -1007,7 +1001,7 @@ recommend:
   restaurants to refine recommendations over time.
 \item
   \textbf{Semantic Filtering}: Support flexible, natural-language
-  queries using embeddings or GPT-powered matching.
+  queries using embeddings or LLM-powered matching.
 \item
   \textbf{Cloud Deployment}: Deploy to Azure to support scalability and
   integrate directly with Heymate's CRM system.

@@ -37,9 +37,9 @@ Based on the project objective, we developed the following modular data pipeline
 
 ### Model Input Pipeline (Horizontal Workflow)
 
-1. Data Ingestion: As mentioned in the [Introduction](#introduction), we used a Uber Eats dataset from Kaggle that covers diverse restaurant types, menu items, and descriptions.
-2. Feature Engineering: As the raw dataset was quite messy, it needed to undergo a series of preprocessing and standardization process so that we can use them for further popularity score calculation. 
-3. Knowledge Base Construction: Under suggestion and domain knowledge from the project partner,we buily a weighted scoring knowledge base on various popularity metrics. This serves as the foundation for capturing market trends and powering recommendations.
+1. Data Ingestion: As mentioned in the [Introduction](#introduction), we used an Uber Eats dataset from Kaggle that covers diverse restaurant types, menu items, and descriptions.
+2. Feature Engineering: As the raw dataset was quite messy, it needed to undergo a series of preprocessing and standardization processes so that we can use them for further popularity score calculation. 
+3. Knowledge Base Construction: Under suggestion and domain knowledge from the project partner,we built a weighted scoring knowledge base on various popularity metrics. This serves as the foundation for capturing market trends and powering recommendations.
 
 ### Testing and Production Pipeline (Vertical Workflow)
 
@@ -83,7 +83,7 @@ All wrangling tasks were encapsulated in modular Python scripts and integrated i
 
 ![Solution Pipeline (Model Training)](../image/final_3_training_pipline.png){#fig-training-pipline width="80%" fig-align="center"}
 
-1. **Data Cleaning**: To handle naming inconsistencies across restaurants, we used a GPT-powered semantic standardization pipeline to group similar items under unified labels (details in [Data Cleaning Module](#data-cleaning-module)).
+1. **Data Cleaning**: To handle naming inconsistencies across restaurants, we used an LLM-powered semantic standardization pipeline to group similar items under unified labels (details in [Data Cleaning Module](#data-cleaning-module)).
 2. **Cleaning Deployment**: The cleaning pipeline runs in batches via a Flask-based batch-processing mechanism for parallel execution. Each batch of raw data was processed and uploaded to generate a cleaned dataset. 
 3. **Scoring and Knowledge Base**: Cleaned items are merged with key popularity metrics to build an aggregated table for popularity score computation (details in [Recommendation Algorithm](#recommendations-algorithm)).
 
@@ -105,19 +105,19 @@ Specifically, we want to address following issues:
 
 ![Cleaning Challenge Example](../image/final_9_cleaning_challenge.png){#fig-cleaning-challenge width="30%" fig-align="center"}
 
-Due to limited time, we decided to utilize GPT API as it can achieve semantic inference, format alignment, as well as language processing more efficiently while maintaining quality. We developed prompts that includes two main parts:
+Due to limited time, we decided to utilize ChatGPT API as it can achieve semantic inference, format alignment, as well as language processing more efficiently while maintaining quality. We developed prompts that includes two main parts:
 
 1. System prompt: Defines the input and output schema as well as cleaning rules, such as how to identify the core dish name, extract up to five descriptors, determine whether an item is a combo, and standardize the restaurant type.
 2. User prompt: Feeds batches of raw menu rows into the model in a list of dictionary format.
 
-The GPT model returns structured output for each menu item, including (@fig-cleaned-example):
+The ChatGPT model returns structured output for each menu item, including (@fig-cleaned-example):
 
 - `dish_base`: core identity (e.g. “fried rice”).
 - `dish_flavor`: tags like cooking method or toppings (e.g. [“chicken”]).
-- `is_combo`: boolean indicating if the item is a combo.
+- `is_combo`: boolean indicating whether the item is a combo.
 - `restaurant_type_std`: standardized restaurant type aligned with Google Maps Food and Drinks category. 
 
-![Cleaned Menu Iten Example](../image/final_10_cleaned_example.png){#fig-cleaned-example width="70%" fig-align="center"}
+![Cleaned Menu Item Example](../image/final_10_cleaned_example.png){#fig-cleaned-example width="70%" fig-align="center"}
 
 To ensure extraction quality and reliability, we iteratively refined our prompt engineering strategy:
 
@@ -189,7 +189,7 @@ As shown in the figure below @fig-rec-example, the top items for a pizza restaur
 
 To make our recommendation results interpretable and actionable, we built a two-part visualization demo:
 
-- **CRM Integration Mockup (Left of @fig-viz-demo):** A conceptual UI showing how Heymate’s CRM can embed our recommender. This allows managers to access top dish insights directly from their dashboard.The Heymate engineering team plans to build this interface in future development.
+- **CRM Integration Mockup (Left of @fig-viz-demo):** A conceptual UI showing how Heymate’s CRM can embed our recommender. This allows managers to access top dish insights directly from their dashboard. The Heymate engineering team plans to build this interface in future development.
 - **Altair Bar Chart (Right of @fig-viz-demo):** A visual of top dishes sorted by popularity score. Features include:
     - Heymate brand colors for top 3 dishes
     - Percentage labels and hover tooltips for easy exploration
@@ -234,15 +234,14 @@ This approach requires payment for API usage. After evaluating trade-offs betwee
 
 ### Distributed Deployment
 
-As mentioned in the [Exploratory Data Analysis](#exploratory-data-analysis) section, the raw Uber Eats dataset originally contained over 5 million rows.To handle this volume efficiently within our project timeline, we implemented a distributed deployment infrastructure. Cleaning this dataset sequentially would have taken over 5,000 hours, so we built an HTTP-triggered batch-processing system using Flask. Each instance processed a defined batch, allowing up to 20 workers to run concurrently and achieving a 20x speedup.
+As mentioned in the [Exploratory Data Analysis](#exploratory-data-analysis) section, the raw Uber Eats dataset originally contained over 5 million rows. Cleaning this amount of data sequentially would have taken more than 5,000 hours. To speed up the process, we used distributed deployment to process multiple batches at the same time. We deployed 20 workers in parallel, achieving a 20× speedup.
 
-Originally, we planned to use Azure Functions following Developer Guide[@azurefunctions], aligning with our partner’s infrastructure, but security configuration issues prevented deployment. As a fallback, we deployed locally. A Looker Studio dashboard was also developed to monitor processing status and performance.
+We initially planned to use Azure Functions as suggested in the Developer Guide[@azurefunctions], to align with our partner’s infrastructure. However, due to security configuration issues, we couldn’t proceed. As a fallback, we deployed the system locally using Flask.
 
 #### Limitation
 The number of concurrent worker instances is limited by the ChatGPT API rate limit.
 
-#### Alternative Approaches Considered
-We evaluated other cloud deployment solutions, such as EC2 from Amazon Web Services and Google Cloud Functions from the Google Cloud Platform. However, our partner uses Microsoft Azure, and we prioritized consistency within that ecosystem. In the future, our partner’s engineering team plans to migrate our local deployment to Azure Functions, once security configurations are in place.
+We explored other cloud deployment options, including Amazon EC2 and Google Cloud Functions. However, since our partner uses Microsoft Azure, we decided to stay within that ecosystem. In the future, their engineering team plans to migrate our local deployment to Azure Functions once the necessary security configurations are in place.
 
 ### Materialized View
 To speed up recommendations, we implemented a Materialized View, a database optimization technique that stores query results as a physical table, reducing query time from 6 minutes to 3 seconds and making the system suitable for integration into Heymate’s CRM.
@@ -295,7 +294,7 @@ To evolve this prototype into a production-ready recommender, we recommend:
 
 - **Temporal Tracking**: Incorporate timestamped data to uncover seasonal patterns and trends.
 - **Restaurant Feedback Loop**: Integrate feedback from partner restaurants to refine recommendations over time.
-- **Semantic Filtering**: Support flexible, natural-language queries using embeddings or GPT-powered matching.
+- **Semantic Filtering**: Support flexible, natural-language queries using embeddings or LLM-powered matching.
 - **Cloud Deployment**: Deploy to Azure to support scalability and integrate directly with Heymate’s CRM system.
 - **Subtype Extraction**: Enhance LLM outputs with more detailed tags (e.g. “spicy,” “gluten-free,” “vegan”) for deeper filtering.
 - **Evaluation Framework**: Design structured evaluations using click data, client interviews, or business KPIs to measure impact.
