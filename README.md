@@ -149,6 +149,13 @@ To open the pdf report, double-click final-report.pdf in your file system or run
 ```shell script
 open final-report.pdf
 ```
+
+Similarly, you can reproduce the **technical report** using
+```shell script
+cd technical_report
+quarto render technical_report.qmd --to pdf
+```
+
 ### Prerequisites
 Ensure you have Quarto installed on your system if you haven't already. You can install it by following the instructions on the Quarto website:
 [Link](https://quarto.org/docs/get-started/)
